@@ -16,3 +16,10 @@ async function handleGoogleLogin(googleUser) {
 
   window.location.href = profile ? "/builder" : "/profile";
 }
+
+
+function logout() {
+      localStorage.removeItem("user");
+      localStorage.removeItem("profile");
+      window.location.href = "/";
+    }

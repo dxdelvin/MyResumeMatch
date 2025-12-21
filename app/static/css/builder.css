@@ -23,28 +23,7 @@ body {
   overflow: hidden; /* Prevent outer body scroll */
 }
 
-/* --- 2. Navbar (Fixed Top) --- */
-.navbar {
-  height: var(--nav-height);
-  background: #fff;
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 30px;
-  flex-shrink: 0;
-}
-.brand { font-weight: 800; font-size: 1.3rem; color: var(--primary); }
-.brand .dot { color: var(--text-main); }
-.nav-links { display: flex; gap: 20px; }
-.icon-link {
-  display: flex; align-items: center; gap: 8px;
-  text-decoration: none; color: var(--text-sub); font-weight: 500; font-size: 0.9rem;
-}
-.icon-link:hover { color: var(--primary); }
-.logout:hover { color: #d32f2f; }
-
-/* --- 3. Main Split-Screen Layout --- */
+/* --- Main Split-Screen Layout --- */
 .studio-container {
   flex-grow: 1; /* Take remaining height */
   display: grid;

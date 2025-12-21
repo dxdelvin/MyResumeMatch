@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
@@ -6,6 +6,7 @@ from app.database import SessionLocal
 from app.models.profile import Profile
 
 router = APIRouter()
+
 
 class ProfileRequest(BaseModel):
     email: str
@@ -15,18 +16,28 @@ class ProfileRequest(BaseModel):
     linkedin: str | None = None
     portfolio: str | None = None
 
+
 @router.get("/profile")
 def get_profile(email: str):
     db: Session = SessionLocal()
 
     profile = db.query(Profile).filter(Profile.email == email).first()
-
     db.close()
 
     if not profile:
         return None
 
-    return profile
+    # ✅ RETURN CLEAN JSON (IMPORTANT)
+    return {
+        "email": profile.email,
+        "full_name": profile.full_name,
+        "phone": profile.phone,
+        "location": profile.location,
+        "linkedin": profile.linkedin,
+        "portfolio": profile.portfolio,
+        "credits": profile.credits
+    }
+
 
 @router.post("/profile")
 def save_profile(data: ProfileRequest):
@@ -42,12 +53,23 @@ def save_profile(data: ProfileRequest):
         profile.linkedin = data.linkedin
         profile.portfolio = data.portfolio
     else:
-        # create new
-        profile = Profile(**data.dict())
+        # create new user with FREE CREDITS
+        profile = Profile(
+            email=data.email,
+            full_name=data.full_name,
+            phone=data.phone,
+            location=data.location,
+            linkedin=data.linkedin,
+            portfolio=data.portfolio,
+            credits=5  # 🔑 FREE CREDITS ON SIGNUP
+        )
         db.add(profile)
 
     db.commit()
     db.refresh(profile)
     db.close()
 
-    return {"message": "Profile saved successfully"}
+    return {
+        "message": "Profile saved successfully",
+        "credits": profile.credits
+    }

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pricing – Resume Builder AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/navbar.css">
+  <link rel="stylesheet" href="/static/css/pricing.css">
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/jwt-decode@3.1.2/build/jwt-decode.min.js"></script>
+  <script>
+    const user = localStorage.getItem("user");
+    const isAuthenticated = user && user !== 'null' && user !== 'undefined' && user.trim() !== '';
+  </script>
+</head>
+<body>
+
+<!-- Single Dynamic Navbar -->
+<nav class="navbar">
+  <div class="nav-container">
+    <div class="brand">ResumeAI<span class="dot">.</span></div>
+    <div class="nav-links" id="navLinks">
+      <!-- Links will be dynamically inserted here -->
+    </div>
+  </div>
+</nav>
+
+<main class="pricing-container">
+
+  <div class="header-section">
+    <h1>Choose Your Plan</h1>
+    <p>Get unlimited access to AI-powered resume generation</p>
+  </div>
+
+  <div class="pricing-grid">
+    <!-- Basic Plan -->
+    <div class="pricing-card">
+      <div class="card-header">
+        <h3>Starter</h3>
+        <div class="price">
+          <span class="amount">$9</span>
+          <span class="period">/month</span>
+        </div>
+      </div>
+      <ul class="features">
+        <li>50 Resume Generations</li>
+        <li>All Resume Styles</li>
+        <li>ATS Optimization</li>
+        <li>Email Support</li>
+      </ul>
+      <button class="btn-primary" onclick="selectPlan('starter')">Get Started</button>
+    </div>
+
+    <!-- Pro Plan -->
+    <div class="pricing-card popular">
+      <div class="popular-badge">Most Popular</div>
+      <div class="card-header">
+        <h3>Professional</h3>
+        <div class="price">
+          <span class="amount">$19</span>
+          <span class="period">/month</span>
+        </div>
+      </div>
+      <ul class="features">
+        <li>200 Resume Generations</li>
+        <li>All Resume Styles</li>
+        <li>ATS Optimization</li>
+        <li>Priority Support</li>
+        <li>Custom Templates</li>
+      </ul>
+      <button class="btn-primary popular-btn" onclick="selectPlan('professional')">Get Started</button>
+    </div>
+
+    <!-- Enterprise Plan -->
+    <div class="pricing-card">
+      <div class="card-header">
+        <h3>Enterprise</h3>
+        <div class="price">
+          <span class="amount">$49</span>
+          <span class="period">/month</span>
+        </div>
+      </div>
+      <ul class="features">
+        <li>Unlimited Generations</li>
+        <li>All Resume Styles</li>
+        <li>ATS Optimization</li>
+        <li>24/7 Support</li>
+        <li>Custom Templates</li>
+        <li>API Access</li>
+      </ul>
+      <button class="btn-primary" onclick="selectPlan('enterprise')">Get Started</button>
+    </div>
+  </div>
+
+  <!-- FAQ Section -->
+  <section class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <div class="faq-grid">
+      <div class="faq-item">
+        <h4>Can I cancel anytime?</h4>
+        <p>Yes, you can cancel your subscription at any time. You'll retain access until the end of your billing period.</p>
+      </div>
+      <div class="faq-item">
+        <h4>What happens to unused credits?</h4>
+        <p>Credits roll over to the next month. Enterprise plan has unlimited usage.</p>
+      </div>
+      <div class="faq-item">
+        <h4>Do you offer refunds?</h4>
+        <p>We offer a 30-day money-back guarantee for all plans.</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script src="/static/js/pricing.js"></script>
+<script src="/static/js/app.js"></script>
+<script src="/static/js/auth.js"></script>
+<script>
+  // Dynamically populate navbar based on authentication status
+  (function() {
+    const navLinks = document.getElementById('navLinks');
+    
+    if (isAuthenticated) {
+      navLinks.innerHTML = `
+        <a href="/profile" class="nav-link">My Profile</a>
+        <a href="/builder" class="nav-link">Builder</a>
+        <a href="/pricing" class="nav-link">Pricing</a>
+        <a href="/" class="nav-link  logout" onclick="logout(); return false;">Sign Out</a>
+      `;
+    } else {
+      navLinks.innerHTML = `
+        <a href="/" class="nav-link">Home</a>
+        <a href="/pricing" class="nav-link">Pricing</a>
+        <a href="/profile" class="nav-link" 
+           data-client_id="109724056179-v1ggq3b91h7jmfa9ivi1etjvq5q5q9ui.apps.googleusercontent.com"
+           data-callback="handleGoogleLogin"
+           data-auto_prompt="false">Sign In</a>
+      `;
+    }
+  })();
+</script>
+</body>
+</html>

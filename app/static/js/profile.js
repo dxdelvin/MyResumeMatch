@@ -4,7 +4,6 @@ if (!user || !user.email) {
   window.location.href = "/";
 }
 
-// Show email (read-only)
 document.getElementById("email").value = user.email;
 
 // Autofill from Google (fallback only)

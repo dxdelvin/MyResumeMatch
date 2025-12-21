@@ -12,3 +12,4 @@ class Profile(Base):
     location = Column(String)
     linkedin = Column(String)
     portfolio = Column(String)
+    credits = Column(Integer, default=5)    

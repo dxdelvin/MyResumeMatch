@@ -7,22 +7,27 @@
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/navbar.css">
     <link rel="stylesheet" href="/static/css/profile.css">
 
     <script>
       const savedUser = localStorage.getItem("user");
-      if (!savedUser) {
+      const isAuthenticated = savedUser && savedUser !== 'null' && savedUser !== 'undefined' && savedUser.trim() !== '';
+      if (!isAuthenticated) {
         window.location.href = "/";
       }
     </script>
   </head>
   <body>
 
-  <nav class="app-navbar">
+  <nav class="navbar">
     <div class="nav-container">
       <div class="brand">ResumeAI<span class="dot">.</span></div>
-      <div class="user-menu">
-        <button onclick="logout()" class="logout-link">Sign Out</button>
+      <div class="nav-links">
+        <a href="/profile" class="nav-link">My Profile</a>
+        <a href="/builder" class="nav-link">Builder</a>
+        <a href="/pricing" class="nav-link">Pricing</a>
+        <a href="/" class="nav-link logout" onclick="logout(); return false;">Sign Out</a>
       </div>
     </div>
   </nav>
@@ -139,6 +144,8 @@
 
 
   </script>
+
+  <script src="/static/js/app.js"></script>
 
   </body>
   </html>

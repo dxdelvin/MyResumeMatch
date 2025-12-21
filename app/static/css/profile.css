@@ -24,48 +24,7 @@ body {
   line-height: 1.5;
 }
 
-/* --- Navbar --- */
-.app-navbar {
-  background: var(--white);
-  height: 60px;
-  border-bottom: 1px solid #e0e0e0;
-  display: flex;
-  justify-content: center;
-  position: sticky;
-  top: 0;
-  z-index: 10;
-}
-
-.nav-container {
-  width: 100%;
-  max-width: 800px;
-  padding: 0 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.brand {
-  font-weight: 700;
-  font-size: 1.2rem;
-  color: var(--primary-blue);
-}
-.brand .dot { color: var(--primary-hover); }
-
-.user-menu {
-  display: flex;
-  gap: 15px;
-  align-items: center;
-  font-size: 0.9rem;
-}
-
-.user-email { color: var(--text-main); font-weight: 500; }
-.logout-link { 
-  background: none; border: none; 
-  color: var(--text-sub); cursor: pointer; 
-  font-size: 0.9rem; 
-}
-.logout-link:hover { color: var(--primary-blue); text-decoration: underline; }
+/* --- Main Content --- */
 
 /* --- Main Layout --- */
 .main-container {

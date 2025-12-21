@@ -9,7 +9,8 @@
 </head>
 <script>
   const user = localStorage.getItem("user");
-  if (user) {
+  const isAuthenticated = user && user !== 'null' && user !== 'undefined' && user.trim() !== '';
+  if (isAuthenticated) {
     window.location.href = "/profile";
   }
 </script>
@@ -20,7 +21,7 @@
       <div class="logo">ResumeAI<span class="dot">.</span></div>
       <div class="nav-links">
         <a href="#features">Features</a>
-        <a href="#" class="btn-secondary">View Samples</a>
+        <a href="/pricing" class="nav-link">Pricing</a>
         <a href="/profile" class="btn-primary" data-client_id="109724056179-v1ggq3b91h7jmfa9ivi1etjvq5q5q9ui.apps.googleusercontent.com"
               data-callback="handleGoogleLogin"
               data-auto_prompt="false">Sign In</a>

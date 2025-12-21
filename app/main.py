@@ -13,6 +13,8 @@ from app.models.profile import Profile
 
 Base.metadata.create_all(bind=engine)
 
+from app.services.credits import has_credits, deduct_credit, add_credits, get_credits
+from app.database import get_db
 
 load_dotenv()
 client = OpenAI(api_key=os.getenv("OPEN_API_KEY"))
@@ -41,19 +43,16 @@ class ResumeInput(BaseModel):
     linkedin: str | None = ""
     portfolio: str | None = ""
     
-@app.post("/api/generate")
+@app.post("/api/generate-resume")
 def generate_resume(data: ResumeInput):
-    # Debug: Print incoming data
-    print("DEBUG: Received data:")
-    print(f"Style: {data.style}")
-    print(f"Full Name: {data.full_name}")
-    print(f"Email: {data.email}")
-    print(f"Phone: {data.phone}")
-    print(f"Location: {data.location}")
-    print(f"LinkedIn: {data.linkedin}")
-    print(f"Portfolio: {data.portfolio}")
-    print(f"Resume Text Length: {len(data.resume_text)}")
-    print(f"Job Description Length: {len(data.job_description)}")
+    
+    db = next(get_db())
+
+    if not has_credits(db, data.email):
+        return {
+            "error": "NO_CREDITS",
+            "message": "You have no credits left. Please purchase more."
+        }
     
     system_prompt = """
 You are a professional resume writer and web developer. Create ATS-friendly resumes in HTML with inline CSS.
@@ -128,6 +127,9 @@ Please create a professional resume that matches this job and scores well on ATS
         resume_html = content.split("===RESUME_HTML===")[1].split("===ATS_SCORE===")[0].strip()
         ats_score = content.split("===ATS_SCORE===")[1].split("===IMPROVEMENT_SUGGESTIONS===")[0].strip()
         improvement_suggestions = content.split("===IMPROVEMENT_SUGGESTIONS===")[1].strip()
+          
+        deduct_credit(db, data.email)
+        
     except Exception:
         return {
             "error": "Failed to parse AI response",
@@ -167,6 +169,10 @@ def profile_page():
 @app.get("/builder")
 def builder_page():
     return FileResponse("app/static/pages/builder.html")
+
+@app.get("/pricing")
+def pricing_page():
+    return FileResponse("app/static/pages/pricing.html")
 
 @app.get("/result/{resume_id}")
 def result_page(resume_id: int):

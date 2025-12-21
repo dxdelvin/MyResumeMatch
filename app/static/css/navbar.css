@@ -1,0 +1,91 @@
+/* Shared Navbar Styles - Include this in all authenticated pages */
+
+/* --- Navbar --- */
+.navbar {
+  background: #ffffff;
+  height: 60px;
+  border-bottom: 1px solid #e0e0e0;
+  display: flex;
+  justify-content: center;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.nav-container {
+  width: 100%;
+  max-width: 1200px;
+  padding: 0 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.brand {
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: #0a66c2;
+}
+
+.brand .dot {
+  color: #004182;
+}
+
+.nav-links {
+  display: flex;
+      align-items: center;
+
+  gap: 20px;
+}
+
+.nav-links a {
+  text-decoration: none;
+  font-size: 0.9rem;
+  color: #666666;
+  transition: color 0.2s;
+}
+
+.nav-links a:hover {
+  color: #0a66c2;
+}
+
+.nav-links a.logout:hover {
+  color: #dc3545;
+}
+
+
+/* Button styles for navbar */
+.nav-links a.btn-primary {
+  background: #0a66c2;
+  color: white !important;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 500;
+  transition: background 0.2s;
+  
+}
+
+.nav-links a.btn-primary:hover {
+  background: #004182 !important;
+  color: white !important;
+}
+
+/* Responsive navbar */
+@media (max-width: 768px) {
+  .nav-links {
+    gap: 15px;
+  }
+
+  .nav-links a {
+    font-size: 0.8rem;
+  }
+
+  .nav-links a.btn-primary {
+    padding: 6px 12px;
+    font-size: 0.8rem;
+  }
+
+  .brand {
+    font-size: 1.1rem;
+  }
+}

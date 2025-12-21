@@ -9,17 +9,30 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
   
+  <link rel="stylesheet" href="/static/css/navbar.css">
   <link rel="stylesheet" href="/static/css/builder.css">
+
+  <script>
+      const savedUser = localStorage.getItem("user");
+      const isAuthenticated = savedUser && savedUser !== 'null' && savedUser !== 'undefined' && savedUser.trim() !== '';
+      if (!isAuthenticated) {
+        window.location.href = "/";
+      }
+    </script>
 </head>
 <body>
 
-  <nav class="navbar">
-    <div class="brand">ResumeAI<span class="dot">.</span> Studio</div>
+<nav class="navbar">
+  <div class="nav-container">
+    <div class="brand">ResumeAI<span class="dot">.</span></div>
     <div class="nav-links">
-      <a href="/profile" class="nav-link icon-link"><span class="material-icons-round">person</span>Profile</a>
-      <a href="/logout" class="nav-link logout icon-link"><span class="material-icons-round">logout</span>Sign Out</a>
+      <a href="/profile" class="nav-link">My Profile</a>
+      <a href="/builder" class="nav-link">Builder</a>
+      <a href="/pricing" class="nav-link">Pricing</a>
+      <a href="/" class="nav-link logout" onclick="logout(); return false;">Sign Out</a>
     </div>
-  </nav>
+  </div>
+</nav>
 
   <main class="studio-container">
 
@@ -40,6 +53,10 @@
             <option value="Tech">Tech Focus</option>
           </select>
         </div>
+        <div class="credits-badge">
+        Credits left: <strong id="creditCount">–</strong>
+        </div>
+
 
         <div class="input-group">
           <label class="input-label">

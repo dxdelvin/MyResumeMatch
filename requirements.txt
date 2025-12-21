@@ -5,3 +5,4 @@ openai
 google-auth
 sqlalchemy
 psycopg2-binary
+stripe
