@@ -25,7 +25,7 @@ CREDIT_PACKS = {
     },
     "pro": {
         "price_id": "price_1SgmxSPgGW2HhSGkYEpqzVUf",
-        "credits": 600
+        "credits": 00
     }
 }
 

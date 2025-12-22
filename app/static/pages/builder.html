@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Studio – Resume Builder AI</title>
+  <title>ResumeAI Studio</title>
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -11,14 +11,6 @@
   
   <link rel="stylesheet" href="/static/css/navbar.css">
   <link rel="stylesheet" href="/static/css/builder.css">
-
-  <script>
-      const savedUser = localStorage.getItem("user");
-      const isAuthenticated = savedUser && savedUser !== 'null' && savedUser !== 'undefined' && savedUser.trim() !== '';
-      if (!isAuthenticated) {
-        window.location.href = "/";
-      }
-    </script>
 </head>
 <body>
 
@@ -27,109 +19,118 @@
     <div class="brand">ResumeAI<span class="dot">.</span></div>
     <div class="nav-links">
       <a href="/profile" class="nav-link">My Profile</a>
-      <a href="/builder" class="nav-link">Builder</a>
+      <a href="/builder" class="nav-link active">Builder</a>
       <a href="/pricing" class="nav-link">Pricing</a>
       <a href="/" class="nav-link logout" onclick="logout(); return false;">Sign Out</a>
     </div>
   </div>
 </nav>
 
-  <main class="studio-container">
+<main class="studio-container">
 
-    <section class="editor-pane">
-      <div class="pane-header">
-        <h2>Input Data</h2>
-        <p>Paste your details to generate.</p>
-      </div>
+  <section class="editor-pane">
+    
+    <div class="pane-header">
+      <h2>Builder Studio</h2>
+      <p>Craft your perfect resume with AI.</p>
+    </div>
 
-      <div class="editor-scroll-content">
-        
-        <div class="tool-card">
-          <label class="tool-label"><span class="material-icons-round">palette</span> Target Style</label>
-          <select id="styleSelect" class="modern-select">
-            <option value="Harvard">Harvard Style</option>
-            <option value="Tech Focus">Tech Focus Style</option>
-            <option value="Two Column">Two Column Style</option>
-            <option value="Fancy">Fancy Style</option>
-          </select>
-        </div>
-        <div class="credits-badge">
-        Credits left: <strong id="creditCount">–</strong>
-        </div>
-
-
-        <div class="input-group">
-          <label class="input-label">
-            <span class="material-icons-round">description</span> Your Current Resume
-          </label>
-          <textarea id="resumeText" placeholder="Paste content here..."></textarea>
-        </div>
-
-        <div class="input-group">
-          <label class="input-label">
-            <span class="material-icons-round">work</span> Target Job Description
-          </label>
-          <textarea id="jobDescription" placeholder="Paste JD here..."></textarea>
-        </div>
-
-      </div>
-
-      <div class="editor-actions">
-        <button class="btn-primary full-width" onclick="generateResume()">
-          <span class="material-icons-round">auto_awesome</span> Generate Resume
-        </button>
-      </div>
-
-    </section>
-
-
-    <section class="preview-pane">
+    <div class="editor-scroll-content">
       
-      <div class="analysis-header sticky-bar">
-        
-        <div class="ats-widget">
-           <div class="gauge-circle" style="--score: 0;">
-             <div class="gauge-inner">
-               <span id="atsScore" class="score-num">--</span>
-               <span class="score-label">ATS Score</span>
-             </div>
-          </div>
-        </div>
+      <div class="input-group">
+        <label class="input-label">
+          <span><span class="material-icons-round" style="font-size:16px; vertical-align:middle;">palette</span> Visual Style</span>
+        </label>
+        <select id="styleSelect" class="modern-select">
+          <option value="Harvard">Harvard Standard (Clean)</option>
+          <option value="Tech">Tech Modern (Bold)</option>
+          <option value="Creative">Creative (Two-Column)</option>
+        </select>
+      </div>
 
-        <button class="btn-icon-text" onclick="printResume()">
-          <span class="material-icons-round">print</span> Print PDF
+      <div class="input-group">
+        <label class="input-label">
+          <span>Your Experience</span>
+          <a class="upload-link" onclick="document.getElementById('fileUpload').click()">
+            <span class="material-icons-round" style="font-size:14px; vertical-align:middle;">upload_file</span> Upload PDF
+          </a>
+          <input type="file" id="fileUpload" style="display:none" accept=".pdf">
+        </label>
+        <textarea id="resumeText" placeholder="Paste your current resume content here, or upload a PDF above..."></textarea>
+      </div>
+
+      <div class="input-group">
+        <label class="input-label">Target Job Description</label>
+        <textarea id="jobDescription" placeholder="Paste the job description here. The AI will optimize keywords for this specific role..."></textarea>
+      </div>
+
+    </div>
+
+    <div class="editor-footer">
+      
+      <div class="credits-display">
+         <span class="material-icons-round" style="font-size:14px; color:#F59E0B;">bolt</span>
+         <span id="creditCount">-</span> Credits Available
+      </div>
+
+      <button class="btn-magic" id="generateBtn" onclick="generateResume()">
+        <span class="material-icons-round">auto_awesome</span>
+        Generate Resume
+      </button>
+
+    </div>
+  </section>
+
+
+  <section class="preview-pane">
+    
+    <div class="preview-hud">
+      <div class="hud-group">
+        <div class="ats-score-pill">
+           <div class="score-circle" style="--score-deg: 0deg;">
+             <div class="score-inner" id="atsScore">--</div>
+           </div>
+           <span>ATS Score</span>
+        </div>
+      </div>
+
+      <div class="hud-group">
+        <button class="btn-ghost" onclick="printResume()">
+          <span class="material-icons-round">download</span> PDF
         </button>
       </div>
+    </div>
 
-      <div class="preview-scroll-container">
-        <div id="output" class="paper-a4">
-          <div class="paper-placeholder">
-            <h3>Resume Preview</h3>
-            <p>Click generate to build your resume.</p>
-          </div>
+    <div class="preview-scroller">
+      <div id="output" class="paper-a4">
+        
+        <div class="empty-state">
+           <span class="material-icons-round empty-icon">description</span>
+           <h3>Ready to Create</h3>
+           <p>Enter your details on the left and hit Generate.</p>
         </div>
+
       </div>
+    </div>
 
-    </section>
+  </section>
 
-  </main>
+</main>
 
-  <script src="/static/js/app.js"></script>
-  
-  <script>
-      // Example: When your app.js calculates the score, update the CSS variable
-      function updateGauge(score) {
-          const gauge = document.querySelector('.gauge-circle');
-          const scoreText = document.getElementById('atsScore');
-          if(gauge && scoreText) {
-               // Update the CSS variable for the visual chart
-              gauge.style.setProperty('--score', score);
-              // Update the text number
-              scoreText.innerText = score;
-          }
-      }
-      // Uncomment to test visual:
-      // setTimeout(() => { updateGauge(85); }, 2000); 
-  </script>
+<script src="/static/js/app.js"></script>
+<script>
+    // Visual Logic for Gauge
+    function updateGauge(score) {
+        const deg = (score / 100) * 360;
+        document.querySelector('.score-circle').style.setProperty('--score-deg', `${deg}deg`);
+        document.getElementById('atsScore').innerText = score;
+    }
+</script>
+
+<div id="loadingOverlay" class="loading-overlay">
+  <div class="spinner"></div>
+  <p>Generating your resume...</p>
+</div>
+
 </body>
 </html>

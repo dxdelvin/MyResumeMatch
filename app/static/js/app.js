@@ -50,15 +50,35 @@ async function loadUserProfile() {
 window.onload = loadUserProfile;
 
 /*************************************************
+ * LOADING FUNCTIONS
+ *************************************************/
+function startGenerate() {
+  const btn = document.getElementById('generateBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="material-icons-round">hourglass_empty</span> Generating...';
+  document.getElementById('loadingOverlay').style.display = 'flex';
+}
+
+function finishGenerate() {
+  const btn = document.getElementById('generateBtn');
+  btn.disabled = false;
+  btn.innerHTML = '<span class="material-icons-round">auto_awesome</span> Generate Resume';
+  document.getElementById('loadingOverlay').style.display = 'none';
+}
+
+/*************************************************
  * GENERATE RESUME
  *************************************************/
 async function generateResume() {
+  startGenerate();
+
   const resumeText = document.getElementById("resumeText").value.trim();
   const jobDescription = document.getElementById("jobDescription").value.trim();
   const style = document.getElementById("styleSelect")?.value || "harvard";
 
   if (!resumeText || !jobDescription) {
     alert("Please provide both resume text and job description.");
+    finishGenerate();
     return;
   }
 
@@ -66,12 +86,14 @@ async function generateResume() {
   if (!currentUser || !currentUser.email) {
     alert("Session expired. Please login again.");
     window.location.href = "/";
+    finishGenerate();
     return;
   }
 
   // Credit check (frontend UX only – backend enforces too)
   if (!currentProfile || currentProfile.credits <= 0) {
     showCreditPopup();
+    finishGenerate();
     return;
   }
 
@@ -99,6 +121,7 @@ async function generateResume() {
     if (!response.ok || !data.resume_html) {
       alert("Failed to generate resume");
       console.error(data);
+      finishGenerate();
       return;
     }
 
@@ -119,21 +142,20 @@ async function generateResume() {
       const atsScoreEl = document.getElementById("atsScore");
       if (atsScoreEl) {
         atsScoreEl.innerText = data.ats_score;
-        atsScoreEl.className =
-          data.ats_score >= 80
-            ? "score-num high"
-            : data.ats_score >= 60
-            ? "score-num medium"
-            : "score-num low";
+        const level = data.ats_score >= 80 ? "high" : data.ats_score >= 60 ? "medium" : "low";
+        atsScoreEl.parentElement.className = `score-circle ${level}`;  // Set class on the circle
+        updateGauge(data.ats_score);  // Update the visual gauge
       }
     }
 
     document.getElementById("output").scrollIntoView({ behavior: "smooth" });
     
+    finishGenerate();
 
   } catch (err) {
     console.error("Resume generation error:", err);
     alert("Something went wrong while generating resume.");
+    finishGenerate();
   }
 }
 
@@ -214,6 +236,16 @@ function printResume() {
       <head>
         <title>Print Resume</title>
         <meta charset="UTF-8">
+        <style>
+          @page {
+            size: A4;
+            orientation: portrait;
+          }
+          body {
+            margin: 0;
+            padding: 0;
+          }
+        </style>
       </head>
       <body>
         ${content}
