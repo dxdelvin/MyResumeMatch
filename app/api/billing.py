@@ -59,7 +59,7 @@ def create_checkout_session(
             "quantity": 1
         }],
         customer_email=email,
-        success_url="http://localhost:8000/builder?payment=success",
+        success_url=f"http://localhost:8000/builder?payment=success&plan={plan}",
         cancel_url="http://localhost:8000/pricing?payment=cancelled",
         metadata={
             "pack_id": plan,

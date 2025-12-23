@@ -58,6 +58,7 @@ async function loadUserProfile() {
 window.onload = () => {
   loadUserProfile();
   setupCharacterCounters();
+  checkPaymentStatus(); // Check for payment confirmation
 };
 
 /*************************************************
@@ -336,6 +337,138 @@ function showCreditPopup() {
   document.getElementById("closePopupBtn").onclick = () => {
     document.body.removeChild(overlay);
   };
+
+  overlay.onclick = (e) => {
+    if (e.target === overlay) {
+      document.body.removeChild(overlay);
+    }
+  };
+}
+
+
+/*************************************************
+ * PAYMENT CONFIRMATION POPUP
+ *************************************************/
+
+// Credit pack details for display
+const CREDIT_PACKS = {
+  basic: { credits: 80, name: "Basic" },
+  popular: { credits: 250, name: "Popular" },
+  pro: { credits: 500, name: "Pro" }
+};
+
+function checkPaymentStatus() {
+  // Get URL parameters
+  const urlParams = new URLSearchParams(window.location.search);
+  const paymentStatus = urlParams.get('payment');
+  const plan = urlParams.get('plan');
+
+  if (paymentStatus === 'success' && plan && currentProfile) {
+    showPaymentPopup(true, plan);
+    // Clean up URL to remove payment params
+    window.history.replaceState({}, document.title, window.location.pathname);
+  } else if (paymentStatus === 'cancelled') {
+    showPaymentPopup(false, null);
+    // Clean up URL
+    window.history.replaceState({}, document.title, window.location.pathname);
+  }
+}
+
+function showPaymentPopup(success, plan) {
+  const overlay = document.createElement("div");
+  overlay.style.cssText = `
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  `;
+
+  const popup = document.createElement("div");
+  popup.style.cssText = `
+    background: white;
+    padding: 40px;
+    border-radius: 16px;
+    text-align: center;
+    max-width: 450px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+  `;
+
+  if (success && plan && CREDIT_PACKS[plan]) {
+    const packInfo = CREDIT_PACKS[plan];
+    popup.innerHTML = `
+      <div style="margin-bottom: 20px;">
+        <span style="font-size: 48px;">✅</span>
+      </div>
+      <h2 style="color:#10B981; margin-bottom: 10px; font-size: 28px;">Payment Successful!</h2>
+      <p style="color: #666; font-size: 16px; margin-bottom: 20px;">
+        Your payment has been processed successfully.
+      </p>
+      <div style="
+        background: #f0fdf4;
+        border: 2px solid #10B981;
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 25px;
+      ">
+        <p style="color: #666; margin: 0 0 8px 0; font-size: 14px;">Credits Added</p>
+        <p style="
+          color: #10B981;
+          font-size: 36px;
+          font-weight: 700;
+          margin: 0;
+        ">+${packInfo.credits}</p>
+      </div>
+      <p style="color: #666; margin-bottom: 20px; font-size: 14px;">
+        Your credits are now available in your account.
+      </p>
+      <button onclick="this.parentElement.parentElement.remove()" style="
+        background: #10B981;
+        color: white;
+        border: none;
+        padding: 14px 32px;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.3s;
+      "
+      onmouseover="this.style.background='#059669'"
+      onmouseout="this.style.background='#10B981'">
+        Continue to Builder
+      </button>
+    `;
+  } else {
+    popup.innerHTML = `
+      <div style="margin-bottom: 20px;">
+        <span style="font-size: 48px;">❌</span>
+      </div>
+      <h2 style="color:#EF4444; margin-bottom: 10px; font-size: 28px;">Payment Cancelled</h2>
+      <p style="color: #666; font-size: 16px; margin-bottom: 25px;">
+        Your payment was cancelled. No charges were made.
+      </p>
+      <button onclick="this.parentElement.parentElement.remove()" style="
+        background: #6c757d;
+        color: white;
+        border: none;
+        padding: 14px 32px;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.3s;
+      "
+      onmouseover="this.style.background='#5a6268'"
+      onmouseout="this.style.background='#6c757d'">
+        Close
+      </button>
+    `;
+  }
+
+  overlay.appendChild(popup);
+  document.body.appendChild(overlay);
 
   overlay.onclick = (e) => {
     if (e.target === overlay) {

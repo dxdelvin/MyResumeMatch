@@ -41,6 +41,9 @@ async function selectPlan(plan) {
 
 // Add some interactive effects
 document.addEventListener('DOMContentLoaded', function() {
+  // Check for payment status on pricing page
+  checkPaymentStatus();
+
   // Add hover effects to pricing cards
   const cards = document.querySelectorAll('.pricing-card');
 
