@@ -11,35 +11,41 @@
     />
 
     <link rel="stylesheet" href="/static/css/login.css" />
+    <link rel="stylesheet" href="/static/css/navbar.css" />
 
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <script src="https://cdn.jsdelivr.net/npm/jwt-decode@3.1.2/build/jwt-decode.min.js"></script>
   </head>
   <body>
     <nav class="navbar">
-      <div class="container nav-container">
-        <div class="logo">ResumeAI<span class="dot">.</span></div>
+  <div class="container nav-container">
+    
+    <div class="logo">ResumeAI<span class="dot">.</span></div>
 
-        <div class="nav-links">
-          <a href="#features">Features</a>
-          <a href="#demo">Video</a>
-          <a href="/pricing">Pricing</a>
+    <button class="hamburger" aria-label="Toggle navigation">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
 
-          <div id="nav-auth-section">
-            <div id="nav-auth-section">
-              <div class="g_id_signin"
-         data-type="standard"
-         data-size="medium"
-         data-theme="filled_blue"
-         data-text="signin"
-         data-shape="rectangular"
-         data-logo_alignment="left">
-    </div>
-            </div>
-          </div>
+    <div class="nav-links">
+      <a href="#features">Features</a>
+      <a href="#demo">Video</a>
+      <a href="/pricing">Pricing</a>
+
+      <div id="nav-auth-section">
+        <div class="g_id_signin"
+             data-type="standard"
+             data-size="medium"
+             data-theme="filled_blue"
+             data-text="signin"
+             data-shape="rectangular"
+             data-logo_alignment="left">
         </div>
       </div>
-    </nav>
+    </div>
+  </div>
+</nav>
 
     <header class="hero">
       <div class="container hero-container">
@@ -221,5 +227,7 @@
     </footer>
 
     <script src="/static/js/auth.js"></script>
+    <script src="/static/js/common.js"></script>
+
   </body>
 </html>

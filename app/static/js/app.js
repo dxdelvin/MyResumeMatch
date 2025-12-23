@@ -432,7 +432,7 @@ function startGenerate(generationType = 'resume') {
 function finishGenerate() {
   const btn = document.getElementById('generateBtn');
   btn.disabled = false;
-  btn.innerHTML = '<span class="material-icons-round">auto_awesome</span> Generate';
+  updateGenerateButtonText(activeView);
   
   const overlay = document.getElementById('loadingOverlay');
   overlay.classList.remove('show');
@@ -873,52 +873,199 @@ function logout() {
 }
 
 /*************************************************
+ * MOBILE RESPONSIVENESS & UI ADJUSTMENTS
+ * *************************************************/
+
+// --- 1. MOBILE ACCORDION LOGIC ---
+function setupMobileAccordions() {
+  // Only run on mobile devices (width < 1000px)
+  if (window.innerWidth > 1000) return;
+
+  const inputs = document.querySelectorAll('.input-group');
+  
+  inputs.forEach(group => {
+    // Avoid double-initialization
+    if (group.dataset.accordionInit) return;
+
+    const label = group.querySelector('.input-label');
+    const content = group.querySelector('textarea, select, .modern-select');
+    const counter = group.querySelector('div[id*="Counter"]'); // Character counters
+
+    // Only apply if we found a label and an input area
+    if (label && content) {
+      group.dataset.accordionInit = "true"; // Mark as done
+      
+      // Make label look clickable
+      label.style.cursor = 'pointer';
+      label.style.userSelect = 'none';
+      
+      // Add the arrow icon if not present
+      let arrow = label.querySelector('.accordion-arrow');
+      if (!arrow) {
+          arrow = document.createElement('span');
+          arrow.className = 'material-icons-round accordion-arrow';
+          arrow.innerText = 'expand_less'; // Default: Open
+          arrow.style.transition = 'transform 0.2s';
+          arrow.style.marginLeft = '10px';
+          // Add to label
+          label.appendChild(arrow);
+      }
+
+      // Add Click Handler to toggle visibility
+      label.addEventListener('click', () => {
+        const isHidden = content.style.display === 'none';
+        
+        // Toggle Input and Counter
+        content.style.display = isHidden ? 'block' : 'none';
+        if (counter) counter.style.display = isHidden ? 'block' : 'none';
+        
+        // Rotate Arrow
+        arrow.style.transform = isHidden ? 'rotate(0deg)' : 'rotate(180deg)';
+      });
+    }
+  });
+}
+
+// --- 2. DYNAMIC BUTTON TEXT LOGIC (Capitalist Mobile Mode) ---
+function updateGenerateButtonText(view) {
+  const btn = document.getElementById('generateBtn');
+  if (!btn) return;
+
+  // RULE: On Mobile, ALWAYS just say "Generate" (Saves space)
+  if (window.innerWidth <= 1000) {
+     btn.innerHTML = '<span class="material-icons-round">auto_awesome</span> Generate';
+     return;
+  }
+
+  // RULE: On Desktop, be specific
+  if (view === 'resume') {
+      btn.innerHTML = '<span class="material-icons-round">auto_awesome</span> Generate Resume';
+  } else if (view === 'coverletter') {
+      btn.innerHTML = '<span class="material-icons-round">mail</span> Generate Cover Letter';
+  }
+}
+
+/*************************************************
  * COVER LETTER FUNCTIONALITY
  *************************************************/
  
-// --- STATE ---
-let activeView = 'resume'; // 'resume' | 'coverletter'
+// 1. Update activeView state
+let activeView = 'resume'; // 'resume' | 'coverletter' | 'history'
 
-// --- VIEW SWITCHING ---
+// 2. Update switchView function
 function switchView(view) {
     activeView = view;
     
-    // 1. Update Tabs
-    document.querySelectorAll('.view-tab').forEach(btn => btn.classList.remove('active'));
+    // Update Tabs UI
+    document.querySelectorAll('.view-tab').forEach(btn => {
+        // Simple text check or logic to set active class
+        const text = btn.innerText.toLowerCase();
+        if (text.includes(view.replace('_', ' '))) {
+             btn.classList.add('active');
+        } else {
+             btn.classList.remove('active');
+        }
+    });
+    document.querySelectorAll('.view-tab').forEach(b => b.classList.remove('active'));
+    // Set current
     event.currentTarget.classList.add('active');
 
-    // 2. Update Content Areas
+
+    // Update Content Areas
     const resumeEl = document.getElementById('output');
     const clEl = document.getElementById('output-cl');
-    const atsContainer = document.getElementById('atsContainer');
-    const mainBtn = document.getElementById('generateBtn');
+    const historyEl = document.getElementById('output-history');
+    
+    const previewActions = document.getElementById('previewActions'); // ATS & Download buttons
     const refineBar = document.getElementById('aiRefineBar');
+
+    // Hide all first
+    resumeEl.style.display = 'none';
+    clEl.style.display = 'none';
+    historyEl.style.display = 'none';
 
     if (view === 'resume') {
         resumeEl.style.display = 'block';
-        clEl.style.display = 'none';
-        atsContainer.style.opacity = '1'; // Show ATS score
-        
-        // Update Main Button Text
-        mainBtn.innerHTML = '<span class="material-icons-round">auto_awesome</span> Generate Resume';
-        mainBtn.onclick = generateResume;
-        
-        // Show refine bar only if resume has content (not empty-state)
-        const hasResume = !resumeEl.querySelector('.empty-state');
-        refineBar.style.display = hasResume ? 'block' : 'none';
-    } else {
-        resumeEl.style.display = 'none';
+        if(previewActions) previewActions.style.visibility = 'visible';
+        if(refineBar) refineBar.style.display = 'block';
+    } 
+    else if (view === 'coverletter') {
         clEl.style.display = 'block';
-        atsContainer.style.opacity = '0'; // Hide ATS score (less relevant for CL)
-
-        // Update Main Button Text
-        mainBtn.innerHTML = '<span class="material-icons-round">mail</span> Generate Cover Letter';
-        mainBtn.onclick = openCLModal; // Below Function is defined next
-        
-        // Show refine bar only if cover letter has content (not empty-state)
-        const hasCoverLetter = !clEl.querySelector('.empty-state');
-        refineBar.style.display = hasCoverLetter ? 'block' : 'none';
+        if(previewActions) previewActions.style.visibility = 'visible';
+        if(refineBar) refineBar.style.display = 'block';
     }
+    else if (view === 'history') {
+        historyEl.style.display = 'block';
+        
+        // Hide Actions and Refine bar for History view
+        if(previewActions) previewActions.style.visibility = 'hidden';
+        if(refineBar) refineBar.style.display = 'none';
+        
+        // Render Data
+        renderHistory();
+    }
+    updateGenerateButtonText(view);
+}
+
+// 3. New Render Function (Mock Data)
+function renderHistory() {
+    const historyEl = document.getElementById('output-history');
+    
+    // Mock Data (Later fetch from API)
+    const mockSessions = [
+        { id: 1, type: 'resume', title: 'Software Engineer - Google', date: '2 mins ago', score: 92 },
+        { id: 2, type: 'cover_letter', title: 'Cover Letter - Netflix', date: '2 days ago', score: null },
+        { id: 3, type: 'resume', title: 'Frontend Dev - Startup', date: '5 days ago', score: 85 },
+    ];
+
+    if (mockSessions.length === 0) {
+        historyEl.innerHTML = `
+            <div class="empty-state">
+                <span class="material-icons-round empty-icon">history</span>
+                <h3>No History Yet</h3>
+                <p>Your generated resumes will appear here.</p>
+            </div>
+        `;
+        return;
+    }
+
+    let html = '<div class="history-grid">';
+    
+    mockSessions.forEach(session => {
+        const icon = session.type === 'resume' ? 'description' : 'mail';
+        const typeLabel = session.type === 'resume' ? 'Resume' : 'Cover Letter';
+        const scoreBadge = session.score 
+            ? `<div class="history-score">ATS: ${session.score}</div>` 
+            : '';
+
+        html += `
+            <div class="history-card">
+                <div class="history-header">
+                    <div class="history-icon">
+                        <span class="material-icons-round">${icon}</span>
+                    </div>
+                    ${scoreBadge}
+                </div>
+                <div>
+                    <div class="history-title">${session.title}</div>
+                    <div class="history-meta">${typeLabel} • ${session.date}</div>
+                </div>
+                <div class="history-actions">
+                    <button class="btn-history-load" onclick="loadSession(${session.id})">Load</button>
+                    <button class="btn-history-delete"><span class="material-icons-round" style="font-size:16px">delete</span></button>
+                </div>
+            </div>
+        `;
+    });
+
+    html += '</div>';
+    historyEl.innerHTML = html;
+}
+
+// 4. Stub for loading a session
+function loadSession(id) {
+    showToast(`Loading session #${id}... (Backend pending)`, 'info');
+    // Logic: Fetch JSON by ID -> Populate Inputs -> Switch View
 }
 
 // --- MODAL HANDLING ---
@@ -1236,3 +1383,19 @@ function showToast(message, type = 'info') {
 
 // Replace standard alerts with this globally accessible function
 window.showToast = showToast;
+
+
+document.addEventListener("DOMContentLoaded", () => {
+   loadUserProfile();
+   setupCharacterCounters();
+
+   setupMobileAccordions();
+   
+   updateGenerateButtonText(activeView);
+});
+
+
+window.addEventListener('resize', () => {
+    updateGenerateButtonText(activeView);
+    setupMobileAccordions(); // Re-check in case layout changed
+});

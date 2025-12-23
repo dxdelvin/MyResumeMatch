@@ -21,6 +21,11 @@
 <nav class="navbar">
   <div class="nav-container">
     <div class="brand">ResumeAI<span class="dot">.</span></div>
+    <button class="hamburger" aria-label="Toggle navigation">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
     <div class="nav-links">
       <a href="/profile" class="nav-link">My Profile</a>
       <a href="/builder" class="nav-link active">Builder</a>
@@ -36,7 +41,7 @@
     
     <div class="pane-header">
       <h2>Builder Studio</h2>
-      <p>Craft your perfect resume with AI.</p>
+      <p class="modal-subtitle">Use Desktop for best experience</p>
     </div>
 
     <div class="editor-scroll-content">
@@ -88,7 +93,7 @@
   </section>
 
 
-  <section class="preview-pane">
+<section class="preview-pane">
     
     <div class="preview-hud">
       <div class="hud-group">
@@ -99,11 +104,13 @@
             <button class="view-tab" onclick="switchView('coverletter')">
                 <span class="material-icons-round">mail</span> Cover Letter
             </button>
+            <button class="view-tab" onclick="switchView('history')">
+                <span class="material-icons-round">history</span> History
+            </button>
         </div>
       </div>
-
-      <div class="hud-group">
-        <div class="ats-score-pill" id="atsContainer">
+      
+      <div class="hud-group" id="previewActions"> <div class="ats-score-pill" id="atsContainer">
            <div class="score-circle">
              <div class="score-inner" id="atsScore">--</div>
            </div>
@@ -133,29 +140,18 @@
         </div>
       </div>
 
+      <div id="output-history" style="display: none; padding: 20px;">
+          </div>
+
     </div>
 
-    <div id="aiRefineBar" class="refine-bar-container" style="display: none;">
-      <div class="refine-input-wrapper">
-         <div class="refine-cost-badge">
-            <span class="material-icons-round">bolt</span> 0.5 Credits
-         </div>
-         <div style="flex: 1;">
-            <input type="text" id="refineInput" class="refine-input" placeholder="Ask AI to adjust...">
-            <div id="refineCounter" style="font-size:11px; color:#666; margin-top:3px; text-align:right; position:absolute; right:10%;"></div>
-         </div>
-         <button class="btn-refine-send" onclick="handleRefine()">
-            <span class="material-icons-round">arrow_upward</span>
-         </button>
-      </div>
-    </div>
-
-  </section>
+    </section>
 
 <div id="clModal" class="modal-overlay" style="display:none;">
     <div class="modal-content">
         <div class="modal-header">
             <h3><span class="text-gradient">Craft Your Narrative</span></h3>
+            
             <button onclick="closeCLModal()" class="btn-icon"><span class="material-icons-round">close</span></button>
         </div>
         <div class="modal-body">
@@ -203,6 +199,8 @@
 </main>
 
 <script src="/static/js/app.js"></script>
+<script src="/static/js/common.js"></script>
+
 <script>
     // Visual Logic for Gauge
     function updateGauge(score) {

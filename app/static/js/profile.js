@@ -111,14 +111,14 @@ async function saveProfile() {
       method: "POST",
       headers: { 
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${user.token}` // 🔒 SECURE: JWT token
+        "Authorization": `Bearer ${user.token}` 
       },
       body: JSON.stringify(payload),
     });
 
     if (res.ok) {
         showToast("Profile updated successfully!", "success");
-        setTimeout(() => window.location.href = "/builder", 1000);
+        setTimeout(() => window.location.href = "/builder", 2200);
     } else {
         showToast("Failed to save profile", "error");
         btn.disabled = false;

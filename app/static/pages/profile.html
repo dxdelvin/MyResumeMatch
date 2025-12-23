@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="/static/css/navbar.css">
     <link rel="stylesheet" href="/static/css/profile.css">
     <link rel="stylesheet" href="/static/css/styles.css">
-
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
     <script>
       const savedUser = localStorage.getItem("user");
       const isAuthenticated = savedUser && savedUser !== 'null' && savedUser !== 'undefined' && savedUser.trim() !== '';
@@ -24,6 +24,11 @@
   <nav class="navbar">
     <div class="nav-container">
       <div class="brand">ResumeAI<span class="dot">.</span></div>
+      <button class="hamburger" aria-label="Toggle navigation">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
       <div class="nav-links">
         <a href="/profile" class="nav-link">My Profile</a>
         <a href="/builder" class="nav-link">Builder</a>
@@ -149,6 +154,8 @@
   </script>
 
   <script src="/static/js/app.js"></script>
+  <script src="/static/js/common.js"></script>
+
 
   </body>
   </html>

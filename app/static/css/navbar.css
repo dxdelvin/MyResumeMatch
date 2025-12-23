@@ -21,6 +21,17 @@
   align-items: center;
 }
 
+@media screen and (max-width: 1000px) {
+  .nav-links {
+        gap: 10px;
+
+    }
+    .nav-links a {
+        font-size: 0.75rem;
+    }
+  
+}
+
 .brand {
   font-weight: 700;
   font-size: 1.2rem;
@@ -87,5 +98,73 @@
 
   .brand {
     font-size: 1.1rem;
+  }
+}
+/* --- HAMBURGER MENU STYLES --- */
+.hamburger {
+  display: none; /* Hidden on Desktop */
+  flex-direction: column;
+  justify-content: space-around;
+  width: 30px;
+  height: 24px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  z-index: 101;
+}
+
+.hamburger span {
+  width: 100%;
+  height: 3px;
+  background: #333; /* Dark color to be visible on white */
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+/* --- MOBILE MENU BEHAVIOR --- */
+/* Match this breakpoint (900px) with your existing media query */
+@media (max-width: 900px) { 
+  
+  /* 1. Show Hamburger */
+  .hamburger {
+    display: flex; 
+  }
+
+  /* 2. Hide Links by Default */
+  .nav-links {
+    position: absolute;
+    top: 60px; /* Height of your navbar */
+    left: 0;
+    width: 100%;
+    background: #ffffff;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 0;
+    gap: 20px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    
+    /* Hide logic */
+    transform: translateY(-150%);
+    transition: transform 0.3s ease-in-out;
+    opacity: 0;
+    z-index: 100;
+  }
+
+  /* 3. Show Links when 'open' class is added by JS */
+  .nav-links.open {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  
+  /* 4. Hamburger Animation (X shape) */
+  .hamburger.active span:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 6px);
+  }
+  .hamburger.active span:nth-child(2) {
+    opacity: 0;
+  }
+  .hamburger.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(5px, -6px);
   }
 }
