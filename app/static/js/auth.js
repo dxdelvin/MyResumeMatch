@@ -1,30 +1,3 @@
-async function handleGoogleLogin(googleUser) {
-  const decoded = jwt_decode(googleUser.credential);
-
-  const user = {
-    email: decoded.email,
-    name: decoded.name,
-    picture: decoded.picture || null,
-    token: googleUser.credential // 🔒 Store JWT token for API calls
-  };
-
-  localStorage.setItem("user", JSON.stringify(user));
-
-  // 🔒 SECURE: Verify with backend using JWT token, not email
-  try {
-    const res = await fetch("/api/profile", {
-      headers: {
-        "Authorization": `Bearer ${googleUser.credential}`
-      }
-    });
-    const profile = await res.json();
-    window.location.href = profile ? "/builder" : "/profile";
-  } catch (err) {
-    console.error("Failed to load profile:", err);
-    window.location.href = "/profile";
-  }
-}
-
 
 function logout() {
       localStorage.removeItem("user");
@@ -94,35 +67,39 @@ function handleSignOut() {
     window.location.reload();
 }
 
-// Existing Google Callback (Keep this connected to your current logic)
+// Existing Google Callback 
 async function handleGoogleLogin(response) {
     try {
         const data = jwt_decode(response.credential);
-        const user = {
+        localStorage.setItem("user", JSON.stringify({
             name: data.name,
             email: data.email,
             picture: data.picture,
-            token: response.credential // 🔒 Store JWT token for API calls
-        };
+            token: response.credential 
+        }));
         
-        // Save to local storage
-        localStorage.setItem("user", JSON.stringify(user));
-        
-        // 🔒 SECURE: Verify with backend using JWT token, not email
         const res = await fetch("/api/profile", {
             headers: {
                 "Authorization": `Bearer ${response.credential}`
             }
         });
-        const profile = await res.json();
-        
-        // Update UI immediately without reload (optional, or just redirect)
-        updateAuthUI();
-        
-        // Redirect based on profile existence
-        window.location.href = profile ? "/builder" : "/profile";
+
+        if (res.ok) {
+            const profile = await res.json();
+            
+            if (profile && profile.email) {
+                window.location.href = "/builder";
+            } else {
+                window.location.href = "/profile";
+            }
+        } else {
+            // Fallback for server errors
+            console.error("Server check failed");
+            window.location.href = "/profile";
+        }
         
     } catch (error) {
-        console.error("Login failed", error);
+        console.error("Login logic failed", error);
+        window.location.href = "/profile";
     }
 }
