@@ -3,9 +3,10 @@
 A web-based AI-powered resume builder that generates ATS-optimized resumes
 based on user input, job descriptions, and selected resume styles
 (Harvard, Normal, Minimal, Custom).
-<img width="1545" height="938" alt="image" src="https://github.com/user-attachments/assets/4148d8e6-385b-4195-a908-df6668c7cbff" />
-<img width="1705" height="965" alt="image" src="https://github.com/user-attachments/assets/3a40a347-bb0f-4dc1-ac12-d5ce6d92fda7" />
+<img width="1733" height="899" alt="image" src="https://github.com/user-attachments/assets/152d801e-57b4-4aa4-bb56-174de0a2d182" />
+<img width="1919" height="983" alt="image" src="https://github.com/user-attachments/assets/21f54159-7b35-4858-8cdd-41f5875de541" />
 <img width="1017" height="963" alt="image" src="https://github.com/user-attachments/assets/06bbc1fd-8c4c-48a0-9cd7-ad87fdba6f47" />
+<img width="1783" height="961" alt="image" src="https://github.com/user-attachments/assets/c01a4e90-ca72-4b8f-a822-b7ed2d3b6fa7" />
 
 ---
 
