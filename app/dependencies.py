@@ -1,49 +1,33 @@
-"""
-FastAPI dependencies for authentication.
-These provide email extraction from Authorization headers across all endpoints.
-"""
-
+# app/dependencies.py
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from google.auth.transport import requests as google_requests
 from google.oauth2 import id_token
 import os
 
-# Security scheme for Swagger documentation
+# Security scheme
 bearer = HTTPBearer(description="Google ID Token (JWT)")
 
-
 def get_verified_email(credentials: HTTPAuthorizationCredentials = Depends(bearer)) -> str:
-    """
-    FastAPI dependency that extracts and verifies email from Authorization header.
-    
-    Usage in endpoints:
-        @router.post("/api/some-endpoint")
-        def my_endpoint(data: MyModel, email: str = Depends(get_verified_email)):
-            # email is now guaranteed to be verified from Google token
-            ...
-    
-    Args:
-        credentials: HTTP Bearer token from Authorization header
-        
-    Returns:
-        str: Verified email address
-        
-    Raises:
-        HTTPException: If token is missing, invalid, or verification fails
-    """
-    if not credentials:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Missing authorization credentials",
-            headers={"WWW-Authenticate": "Bearer"}
-        )
-    
     token = credentials.credentials
+    
+    # 1. Check if Client ID is actually loaded
+    client_id = os.getenv("GOOGLE_CLIENT_ID")
+    if not client_id:
+        print("❌ CRITICAL ERROR: GOOGLE_CLIENT_ID is not set in environment variables!")
+        raise HTTPException(status_code=500, detail="Server Configuration Error")
+
     try:
+        # 2. Verify the token
         idinfo = id_token.verify_oauth2_token(
-            token, google_requests.Request(), os.getenv("GOOGLE_CLIENT_ID")
+            token, google_requests.Request(), client_id
         )
         return idinfo["email"]
-    except Exception:
-        raise HTTPException(status_code=401, detail="Invalid token")
+        
+    except ValueError as e:
+        # 3. Print the specific error (e.g. "Token expired", "Audience mismatch")
+        print(f"❌ Token Validation Failed: {e}")
+        raise HTTPException(status_code=401, detail=f"Invalid token: {str(e)}")
+    except Exception as e:
+        print(f"❌ Unexpected Auth Error: {e}")
+        raise HTTPException(status_code=401, detail="Authentication failed")

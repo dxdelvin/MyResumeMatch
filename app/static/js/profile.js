@@ -29,6 +29,11 @@ async function loadProfile() {
   const title = document.getElementById("profileTitle");
   const subtitle = document.getElementById("profileSubtitle");
 
+  const emailInput = document.getElementById("email");
+  if (emailInput && user.email) {
+      emailInput.value = user.email;
+  }
+
   try {
     // 🔒 SECURE: Use JWT token, not email parameter
     const res = await fetch("/api/profile", {
