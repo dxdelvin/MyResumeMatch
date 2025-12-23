@@ -12,6 +12,9 @@
   <link rel="stylesheet" href="/static/css/navbar.css">
   <link rel="stylesheet" href="/static/css/builder.css">
   <link rel="stylesheet" href="/static/css/styles.css">
+  
+  <!-- PDF.js Library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 </head>
 <body>
 
@@ -52,12 +55,12 @@
       <div class="input-group">
         <label class="input-label">
           <span>Your Experience</span>
-          <a class="upload-link" onclick="document.getElementById('fileUpload').click()">
+          <a class="upload-link" >
             <span class="material-icons-round" style="font-size:14px; vertical-align:middle;">upload_file</span> Upload PDF
           </a>
           <input type="file" id="fileUpload" style="display:none" accept=".pdf">
         </label>
-        <textarea id="resumeText" placeholder="Paste your current resume content here, or upload a PDF above..."></textarea>
+        <textarea id="resumeText" placeholder="Paste your current resume content here, or upload a PDF of Your CV Details above..."></textarea>
         <div id="resumeCounter" style="font-size:12px; color:#666; margin-top:4px; text-align:right;"></div>
       </div>
 
@@ -164,13 +167,25 @@
             </div>
 
             <div class="input-group">
-                <label class="input-label">Why this company? (The Hook)</label>
+                <label class="input-label">
+                  Why this company? (The Hook)
+                  <a class="upload-link">
+                    <span class="material-icons-round" style="font-size:14px; vertical-align:middle;">upload_file</span> Upload
+                  </a>
+                  <input type="file" id="clMotivationPdf" style="display:none" accept=".pdf">
+                </label>
                 <textarea id="clMotivation" class="modern-textarea short" placeholder="I've admired [Company] for years because..."></textarea>
                 <div id="clMotivationCounter" style="font-size:11px; color:#666; margin-top:3px; text-align:right;"></div>
             </div>
 
             <div class="input-group">
-                <label class="input-label">Key Achievement to Highlight</label>
+                <label class="input-label">
+                  Key Achievement to Highlight
+                  <a class="upload-link">
+                    <span class="material-icons-round" style="font-size:14px; vertical-align:middle;">upload_file</span> Upload
+                  </a>
+                  <input type="file" id="clHighlightPdf" style="display:none" accept=".pdf">
+                </label>
                 <textarea id="clHighlight" class="modern-textarea short" placeholder="e.g. My success in scaling the database..."></textarea>
                 <div id="clHighlightCounter" style="font-size:11px; color:#666; margin-top:3px; text-align:right;"></div>
             </div>

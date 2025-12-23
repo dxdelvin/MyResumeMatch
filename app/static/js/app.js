@@ -1,6 +1,4 @@
-/*************************************************
- * GLOBAL STATE
- *************************************************/
+
 let currentUser = null;
 let currentProfile = null;
 
@@ -11,6 +9,13 @@ const CHAR_LIMITS = {
   ask_ai_adjust: 4000,
   cover_letter_extra: 1000
 };
+
+// PDF Extraction Constants
+const PDF_CHAR_LIMIT = 6000;
+const MAX_PDF_PAGES = 5; // Limit extraction to first 5 pages
+
+// Set PDF.js worker
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
 /*************************************************
  * LOAD USER + PROFILE (ON PAGE LOAD)
@@ -59,6 +64,7 @@ window.onload = () => {
   loadUserProfile();
   setupCharacterCounters();
   checkPaymentStatus(); // Check for payment confirmation
+  setupPDFUpload(); // Setup PDF upload handler
 };
 
 /*************************************************
@@ -150,17 +156,220 @@ function setupCounterForElement(element, counterId, limit) {
   updateCounter();
 }
 
+/*************************************************
+ * PDF UPLOAD & EXTRACTION
+ *************************************************/
+function setupPDFUpload() {
+  const fileUpload = document.getElementById('fileUpload');
+  
+  fileUpload.addEventListener('change', async (e) => {
+    const file = e.target.files[0];
+    
+    if (!file) return;
+    
+    // Validate file type
+    if (file.type !== 'application/pdf') {
+      showToast('Please upload a valid PDF file.', 'error');
+      return;
+    }
+    
+    // Validate file size (max 10MB)
+    const maxSize = 10 * 1024 * 1024;
+    if (file.size > maxSize) {
+      showToast('PDF file is too large. Maximum size is 10MB.', 'error');
+      return;
+    }
+    
+    // Show loading state
+    showToast('📄 Extracting text from PDF...', 'info');
+    
+    try {
+      const extractedText = await extractTextFromPDF(file);
+      
+      if (!extractedText) {
+        showToast('Could not extract text from PDF. Please ensure it\'s a valid PDF.', 'error');
+        return;
+      }
+      
+      // Limit to PDF_CHAR_LIMIT
+      const limitedText = extractedText.substring(0, PDF_CHAR_LIMIT);
+      const isLimited = extractedText.length > PDF_CHAR_LIMIT;
+      
+      // Populate the textarea
+      const resumeEl = document.getElementById('resumeText');
+      resumeEl.value = limitedText;
+      
+      // Trigger input event to update counter
+      resumeEl.dispatchEvent(new Event('input'));
+      
+      // Show success toast with info about extraction
+      const charCount = limitedText.length;
+      const totalChars = extractedText.length;
+      
+      if (isLimited) {
+        showToast(
+          `✅ Extracted ${charCount}/${totalChars} characters (limited to ${PDF_CHAR_LIMIT} chars)`,
+          'success'
+        );
+      } else {
+        showToast(
+          `✅ Successfully extracted ${charCount} characters from PDF`,
+          'success'
+        );
+      }
+      
+    } catch (err) {
+      console.error('PDF extraction error:', err);
+      showToast('Error extracting PDF. Please try again.', 'error');
+    }
+    
+    // Reset file input asynchronously to avoid triggering another file picker
+    setTimeout(() => {
+      fileUpload.value = '';
+    }, 0);
+  });
+}
+
+async function extractTextFromPDF(file) {
+  try {
+    // Read file as ArrayBuffer
+    const arrayBuffer = await file.arrayBuffer();
+    
+    // Load PDF document
+    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+    
+    let fullText = '';
+    const pagesToProcess = Math.min(pdf.numPages, MAX_PDF_PAGES);
+    
+    // Extract text from first N pages
+    for (let pageNum = 1; pageNum <= pagesToProcess; pageNum++) {
+      const page = await pdf.getPage(pageNum);
+      const textContent = await page.getTextContent();
+      
+      // Join text items with spaces
+      const pageText = textContent.items
+        .map(item => (item.str || ''))
+        .join(' ');
+      
+      fullText += pageText + '\n\n';
+      
+      // Stop if we've already exceeded the limit
+      if (fullText.length > PDF_CHAR_LIMIT) {
+        break;
+      }
+    }
+    
+    // Clean up whitespace
+    fullText = fullText
+      .replace(/\s+/g, ' ') // Replace multiple spaces with single space
+      .trim();
+    
+    return fullText;
+    
+  } catch (err) {
+    console.error('PDF extraction failed:', err);
+    throw err;
+  }
+}
+
+/**
+ * Setup PDF extraction for modal fields (Motivation and Highlight)
+ */
+function setupModalPDFUpload() {
+  // Motivation PDF Upload
+  const clMotivationPdf = document.getElementById('clMotivationPdf');
+  if (clMotivationPdf) {
+    clMotivationPdf.addEventListener('change', async (e) => {
+      await handleModalPDFUpload(e, 'clMotivation', CHAR_LIMITS.cover_letter_extra, 'Motivation');
+    });
+  }
+  
+  // Highlight PDF Upload
+  const clHighlightPdf = document.getElementById('clHighlightPdf');
+  if (clHighlightPdf) {
+    clHighlightPdf.addEventListener('change', async (e) => {
+      await handleModalPDFUpload(e, 'clHighlight', CHAR_LIMITS.cover_letter_extra, 'Highlight');
+    });
+  }
+}
+
+async function handleModalPDFUpload(event, textareaId, charLimit, fieldName) {
+  const file = event.target.files[0];
+  
+  if (!file) return;
+  
+  // Validate file type
+  if (file.type !== 'application/pdf') {
+    showToast('Please upload a valid PDF file.', 'error');
+    return;
+  }
+  
+  // Validate file size (max 10MB)
+  const maxSize = 10 * 1024 * 1024;
+  if (file.size > maxSize) {
+    showToast('PDF file is too large. Maximum size is 10MB.', 'error');
+    return;
+  }
+  
+  showToast('📄 Extracting text from PDF...', 'info');
+  
+  try {
+    const extractedText = await extractTextFromPDF(file);
+    
+    if (!extractedText) {
+      showToast('Could not extract text from PDF. Please ensure it\'s a valid PDF.', 'error');
+      return;
+    }
+    
+    // Limit to field-specific char limit
+    const limitedText = extractedText.substring(0, charLimit);
+    const isLimited = extractedText.length > charLimit;
+    
+    // Populate the textarea
+    const textarea = document.getElementById(textareaId);
+    textarea.value = limitedText;
+    
+    // Trigger input event to update counter
+    textarea.dispatchEvent(new Event('input'));
+    
+    // Show success toast
+    const charCount = limitedText.length;
+    const totalChars = extractedText.length;
+    
+    if (isLimited) {
+      showToast(
+        `✅ ${fieldName}: Extracted ${charCount}/${totalChars} characters (limited to ${charLimit} chars)`,
+        'success'
+      );
+    } else {
+      showToast(
+        `✅ ${fieldName}: Successfully extracted ${charCount} characters`,
+        'success'
+      );
+    }
+    
+  } catch (err) {
+    console.error('Modal PDF extraction error:', err);
+    showToast('Error extracting PDF. Please try again.', 'error');
+  }
+  
+  // Reset file input asynchronously to avoid triggering another file picker
+  setTimeout(() => {
+    event.target.value = '';
+  }, 0);
+}
+
 function validateCharacterLimits() {
   const resumeText = document.getElementById("resumeText").value;
   const jobDescription = document.getElementById("jobDescription").value;
 
   if (resumeText.length > CHAR_LIMITS.resume_experience) {
-    alert(`Your Experience exceeds the ${CHAR_LIMITS.resume_experience} character limit.`);
+    showToast(`Your Experience exceeds the ${CHAR_LIMITS.resume_experience} character limit.`, "error");
     return false;
   }
 
   if (jobDescription.length > CHAR_LIMITS.job_description) {
-    alert(`Job Description exceeds the ${CHAR_LIMITS.job_description} character limit.`);
+    showToast(`Job Description exceeds the ${CHAR_LIMITS.job_description} character limit.`, "error");
     return false;
   }
 
@@ -285,7 +494,7 @@ async function generateResume() {
 
   // Auth check
   if (!currentUser || !currentUser.email) {
-    alert("Session expired. Please login again.");
+    showToast("Session expired. Please login again.", "error");
     window.location.href = "/";
     finishGenerate();
     return;
@@ -569,7 +778,7 @@ async function updateResumeWithAI() {
 
   // ✅ Character limit validation
   if (instruction.length > CHAR_LIMITS.ask_ai_adjust) {
-    alert(`Your instruction exceeds ${CHAR_LIMITS.ask_ai_adjust} characters. Please be more concise.`);
+    showToast(`Your instruction exceeds ${CHAR_LIMITS.ask_ai_adjust} characters. Please be more concise.`, "error");
     return;
   }
 
@@ -636,7 +845,7 @@ async function updateResumeWithAI() {
 
   } catch (err) {
     console.error("Refine error:", err);
-    alert("Error: " + err.message);
+    showToast("Error: " + err.message, "error");
   } finally {
     // Reset UI
     btn.innerHTML = originalIcon;
@@ -706,9 +915,13 @@ function switchView(view) {
 function openCLModal() {
     // Basic validation before opening
     const jobDesc = document.getElementById("jobDescription").value.trim();
-    if(!jobDesc) { alert("Please paste a Job Description first."); return; }
+    
+    if(!jobDesc) { showToast("Please paste a Job Description first.", "error"); return; }
     
     document.getElementById('clModal').style.display = 'flex';
+    
+    // Setup PDF handlers for modal fields
+    setupModalPDFUpload();
 }
 
 function closeCLModal() {
@@ -912,7 +1125,7 @@ function printActiveDocument() {
   const hasEmptyState = contentElement ? contentElement.querySelector('.empty-state') : null;
   
   if (!contentElement || hasEmptyState || contentElement.innerText.trim() === "") {
-      alert(`Your ${title} is not ready yet. Please generate it first.`);
+      showToast(`Your ${title} is not ready yet. Please generate it first.`, "error");
       return;
   }
 
