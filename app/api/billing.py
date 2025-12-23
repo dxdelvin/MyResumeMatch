@@ -16,16 +16,16 @@ router = APIRouter(prefix="/api/billing", tags=["billing"])
 # 🔒 Credit packs (single source of truth)
 CREDIT_PACKS = {
     "basic": {
-        "price_id": "price_1SgmsRPgGW2HhSGkWMQwg526",
-        "credits": 100
+        "price_id": "price_1ShVSu7n4jiFDpJAU3hvl7Ev",
+        "credits": 80
     },
     "popular": {
-        "price_id": "price_1SgmwzPgGW2HhSGkqnkbBNWY",
-        "credits": 300
+        "price_id": "price_1ShVTY7n4jiFDpJAU0xGzEKq",
+        "credits": 250
     },
     "pro": {
-        "price_id": "price_1SgmxSPgGW2HhSGkYEpqzVUf",
-        "credits": 800
+        "price_id": "price_1ShVUG7n4jiFDpJAq3yHMaGE",
+        "credits": 500
     }
 }
 
