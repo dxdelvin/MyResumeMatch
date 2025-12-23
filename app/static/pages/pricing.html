@@ -10,6 +10,8 @@
 
   <link rel="stylesheet" href="/static/css/navbar.css" />
   <link rel="stylesheet" href="/static/css/pricing.css" />
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/jwt-decode@3.1.2/build/jwt-decode.min.js"></script>
 
   <script>
     const user = localStorage.getItem("user");
@@ -123,7 +125,7 @@
 
       <div class="faq-item">
         <h4>How many credits does one resume use?</h4>
-        <p>Each resume generation uses 1 credit.</p>
+        <p>Each resume generation uses 1 credit. and Refining Takes 0.5 Credits.</p>
       </div>
     </div>
   </section>
@@ -149,7 +151,21 @@
       navLinks.innerHTML = `
         <a href="/" class="nav-link">Home</a>
         <a href="/pricing" class="nav-link active">Pricing</a>
-        <a href="/profile" class="nav-link">Sign In</a>
+        <div id="nav-auth-section">
+              <div class="g_id_signin"
+         data-type="standard"
+         data-size="medium"
+         data-theme="filled_blue"
+         data-text="signin"
+         data-shape="rectangular"
+         data-logo_alignment="left">
+    </div>
+     <div
+              id="g_id_onload"
+              data-client_id="109724056179-v1ggq3b91h7jmfa9ivi1etjvq5q5q9ui.apps.googleusercontent.com"
+              data-callback="handleGoogleLogin"
+              data-auto_prompt="false"
+            ></div>
       `;
     }
   })();

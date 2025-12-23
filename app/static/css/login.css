@@ -443,3 +443,7 @@ footer {
 .btn-primary-large:hover {
     background: #1d4ed8;
 }
+
+#nav-auth-section {
+    margin-left: 15px;
+}
