@@ -39,7 +39,6 @@ async function loadProfile() {
 
     const profile = await res.json();
 
-    // ✅ CASE 1: Profile exists → Edit mode
     if (profile) {
       document.getElementById("fullName").value = profile.full_name || "";
       document.getElementById("phone").value = profile.phone || "";
@@ -50,31 +49,33 @@ async function loadProfile() {
       title.innerText = "Edit Your Profile";
       subtitle.innerText = "Update your details anytime.";
 
-      const initials = profile.full_name
-        .split(" ")
-        .map((n) => n[0])
-        .join("")
-        .substring(0, 2)
-        .toUpperCase();
-
-      document.getElementById("avatarInitials").innerText = initials;
+      // Set initials
+      if (profile.full_name) {
+        const initials = profile.full_name
+          .split(" ")
+          .map((n) => n[0])
+          .join("")
+          .substring(0, 2)
+          .toUpperCase();
+        document.getElementById("avatarInitials").innerText = initials;
+      }
     }
-    // ✅ CASE 2: No profile → First-time user
     else {
       title.innerText = "Complete Your Profile";
-      subtitle.innerText =
-        "We'll use these details to build your resume.";
-
+      subtitle.innerText = "We'll use these details to build your resume.";
       autofillFromGoogleIfEmpty();
+      // Optional: Info toast for new users
+      showToast("Welcome! Please complete your profile.", "info");
     }
   } catch (err) {
     console.error("Error loading profile:", err);
+    
+    // ✅ UX IMPROVEMENT: Error Toast
+    showToast("Could not load profile data. Please refresh.", "error");
 
     // Fallback UX
     title.innerText = "Complete Your Profile";
-    subtitle.innerText =
-      "We'll use these details to build your resume.";
-
+    subtitle.innerText = "We'll use these details to build your resume.";
     autofillFromGoogleIfEmpty();
   }
 }
@@ -104,10 +105,18 @@ async function saveProfile() {
       body: JSON.stringify(payload),
     });
 
-    window.location.href = "/builder";
+    if (res.ok) {
+        showToast("Profile updated successfully!", "success");
+        setTimeout(() => window.location.href = "/builder", 1000);
+    } else {
+        showToast("Failed to save profile", "error");
+        btn.disabled = false;
+        btn.innerText = originalText;
+    }
   } catch (err) {
-    console.error("Error saving profile:", err);
-    alert("Something went wrong");
+    showToast("Network error", "error");
+    btn.disabled = false;
+    btn.innerText = originalText;
   }
 }
 
@@ -122,3 +131,44 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
+
+
+
+
+// --- TOAST NOTIFICATION SYSTEM ---
+function showToast(message, type = 'info') {
+  let container = document.getElementById('toast-container');
+  if (!container) {
+    container = document.createElement('div');
+    container.id = 'toast-container';
+    document.body.appendChild(container);
+  }
+
+  const toast = document.createElement('div');
+  toast.className = `toast ${type}`;
+  
+  let icon = 'info';
+  if (type === 'success') icon = 'check_circle';
+  if (type === 'error') icon = 'error_outline';
+
+  toast.innerHTML = `
+    <span class="material-icons-round">${icon}</span>
+    <span>${message}</span>
+  `;
+
+  container.appendChild(toast);
+
+  // Trigger animation
+  requestAnimationFrame(() => {
+    toast.classList.add('show');
+  });
+
+  // Remove after 3 seconds
+  setTimeout(() => {
+    toast.classList.remove('show');
+    setTimeout(() => toast.remove(), 300);
+  }, 4000);
+}
+
+// Replace standard alerts with this globally accessible function
+window.showToast = showToast;

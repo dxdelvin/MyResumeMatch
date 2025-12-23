@@ -166,25 +166,105 @@ function validateCharacterLimits() {
 
   return true;
 }
-function startGenerate() {
+// Tips and facts to keep users engaged during loading
+const LOADING_TIPS = [
+  "💡 Pro Tip: Use action verbs like 'Led', 'Designed', or 'Implemented' to make your resume stand out!",
+  "⭐ Did you know? 92% of recruiters spend less than 10 seconds on your resume - make it count!",
+  "🏃 ATS Fact: Most modern applicant tracking systems scan for keywords first - include relevant skills!",
+  "📊 Resume Hack: Quantify your achievements with numbers and percentages whenever possible!",
+  "✅ Best Practice: Tailor your resume to each job description for better results!",
+  "🚀 Career Tip: A strong summary can make recruiters read further into your resume!",
+  "🔥 Engagement Secret: Use specific company names and technologies you've worked with!",
+  "💼 Pro Move: Update your LinkedIn to match your resume for maximum visibility!",
+  "🎓 Skill Boost: Highlight both technical and soft skills for well-rounded appeal!",
+  "⏱️ Time Saver: Most recruiters only scan your resume - put important info upfront!"
+];
+
+let currentTipIndex = 0;
+
+function startGenerate(generationType = 'resume') {
   const btn = document.getElementById('generateBtn');
   btn.disabled = true;
-  btn.innerHTML = '<span class="material-icons-round">hourglass_empty</span> Generating...';
-  document.getElementById('loadingOverlay').style.display = 'flex';
+  
+  // Set button text based on type
+  if (generationType === 'resume') {
+    btn.innerHTML = '<span class="material-icons-round">hourglass_empty</span> Generating Resume...';
+  } else if (generationType === 'cover-letter') {
+    btn.innerHTML = '<span class="material-icons-round">hourglass_empty</span> Generating Cover Letter...';
+  } else {
+    btn.innerHTML = '<span class="material-icons-round">hourglass_empty</span> Generating...';
+  }
+  
+  const overlay = document.getElementById('loadingOverlay');
+  overlay.classList.add('show');
+  
+  // Update loading text
+  let loadingText = overlay.querySelector('p');
+  if (!loadingText) {
+    loadingText = document.createElement('p');
+    overlay.querySelector('.spinner').after(loadingText);
+  }
+  
+  if (generationType === 'resume') {
+    loadingText.textContent = '✨ Crafting your perfect resume...';
+  } else if (generationType === 'cover-letter') {
+    loadingText.textContent = '📝 Composing your cover letter...';
+  } else {
+    loadingText.textContent = '⏳ Working on your document...';
+  }
+  
+  // Start rotating tips
+  startTipRotation();
 }
 
 function finishGenerate() {
   const btn = document.getElementById('generateBtn');
   btn.disabled = false;
   btn.innerHTML = '<span class="material-icons-round">auto_awesome</span> Generate';
-  document.getElementById('loadingOverlay').style.display = 'none';
+  
+  const overlay = document.getElementById('loadingOverlay');
+  overlay.classList.remove('show');
+  
+  // Stop tip rotation
+  stopTipRotation();
+}
+
+let tipInterval = null;
+
+function startTipRotation() {
+  stopTipRotation(); // Clear any existing interval
+  
+  const overlay = document.getElementById('loadingOverlay');
+  let tipEl = overlay.querySelector('.loading-tip');
+  
+  if (!tipEl) {
+    tipEl = document.createElement('div');
+    tipEl.className = 'loading-tip';
+    overlay.appendChild(tipEl);
+  }
+  
+  // Show first tip immediately
+  tipEl.textContent = LOADING_TIPS[currentTipIndex];
+  
+  // Rotate tips every 4 seconds
+  tipInterval = setInterval(() => {
+    currentTipIndex = (currentTipIndex + 1) % LOADING_TIPS.length;
+    tipEl.textContent = LOADING_TIPS[currentTipIndex];
+  }, 4000);
+}
+
+function stopTipRotation() {
+  if (tipInterval) {
+    clearInterval(tipInterval);
+    tipInterval = null;
+  }
 }
 
 /*************************************************
  * GENERATE RESUME
  *************************************************/
 async function generateResume() {
-  startGenerate();
+  startGenerate('resume');
 
   const resumeText = document.getElementById("resumeText").value.trim();
   const jobDescription = document.getElementById("jobDescription").value.trim();
@@ -192,7 +272,7 @@ async function generateResume() {
 
   // ✅ Validation: Empty inputs
   if (!resumeText || !jobDescription) {
-    alert("Please provide both resume text and job description.");
+    showToast("Please provide both resume text and job description.", "error");
     finishGenerate();
     return;
   }
@@ -240,8 +320,8 @@ async function generateResume() {
     const data = await response.json();
 
     if (!response.ok || !data.resume_html) {
-      alert("Error: " + (data.detail || "Failed to generate resume"));
-      console.error(data);
+      const msg = data.detail || "Failed to generate resume";
+      showToast(msg, "error");
       finishGenerate();
       return;
     }
@@ -277,12 +357,12 @@ async function generateResume() {
     if (refineBar) {
         refineBar.style.display = "block"; 
     }
-      
+    showToast("Resume generated successfully!", "success");  
     finishGenerate();
 
   } catch (err) {
     console.error("Resume generation error:", err);
-    alert("Something went wrong while generating resume.");
+    showToast("Network error. Please try again.", "error");
     finishGenerate();
   }
 }
@@ -650,12 +730,11 @@ async function submitCoverLetterGen() {
 
     // ✅ Character limit validation for cover letter fields
     if (motivation.length > CHAR_LIMITS.cover_letter_extra) {
-        alert(`Motivation text exceeds ${CHAR_LIMITS.cover_letter_extra} characters.`);
-        return;
+        showToast(`Motivation text exceeds ${CHAR_LIMITS.cover_letter_extra} characters.`, "error");        return;
     }
 
     if (highlight.length > CHAR_LIMITS.cover_letter_extra) {
-        alert(`Highlight text exceeds ${CHAR_LIMITS.cover_letter_extra} characters.`);
+        showToast(`Highlight text exceeds ${CHAR_LIMITS.cover_letter_extra} characters.`, "error");
         return;
     }
 
@@ -665,7 +744,7 @@ async function submitCoverLetterGen() {
         return;
     }
 
-    startGenerate(); // Reuse existing loader
+    startGenerate('cover-letter'); // Pass document type for context-aware loading message
 
     try {
         const response = await fetch("/api/generate-cover-letter", {
@@ -693,7 +772,7 @@ async function submitCoverLetterGen() {
             throw new Error(data.detail || data.error);
         }
 
-        // ✅ ATOMIC: Update Credit & Update UI from response
+        
         currentProfile.credits = data.credits_left;
         document.getElementById("creditCount").innerText = currentProfile.credits;
 
@@ -703,10 +782,11 @@ async function submitCoverLetterGen() {
         
         // Show Refine Bar (content was generated successfully)
         document.getElementById("aiRefineBar").style.display = "block";
+        showToast("Cover Letter generated successfully!", "success");
 
     } catch (err) {
         console.error(err);
-        alert("Error: " + err.message);
+        showToast(err.message, "error");
     } finally {
         finishGenerate();
     }
@@ -726,13 +806,16 @@ async function updateCoverLetterWithAI() {
     // and calls /api/refine-resume with type: "cover_letter"
     const inputEl = document.querySelector('.refine-input');
     const instruction = inputEl.value.trim();
-    if (!instruction) return;
+    if (!instruction) {
+    showToast("Please enter an instruction.", "info");
+    return;
+  }
 
     // ✅ Character limit validation
     if (instruction.length > CHAR_LIMITS.ask_ai_adjust) {
-      alert(`Your instruction exceeds ${CHAR_LIMITS.ask_ai_adjust} characters. Please be more concise.`);
-      return;
-    }
+    showToast(`Instruction exceeds ${CHAR_LIMITS.ask_ai_adjust} chars.`, "error");
+    return;
+  }
 
     // Credit check
     if (!currentProfile || currentProfile.credits < 0.5) {
@@ -788,6 +871,7 @@ async function updateCoverLetterWithAI() {
 
         // Success feedback
         inputEl.value = '';
+        showToast("Refinement complete!", "success");
         btn.style.background = "#10B981";
         setTimeout(() => { 
             btn.style.background = "";
@@ -795,7 +879,7 @@ async function updateCoverLetterWithAI() {
 
     } catch(e) { 
       console.error(e);
-      alert("Error: " + e.message);
+      showToast(err.message, "error");
     } finally {
       // Reset UI
       btn.innerHTML = originalIcon;
@@ -882,3 +966,42 @@ function printActiveDocument() {
     printWindow.close();
   }, 500);
 }
+
+
+// --- TOAST NOTIFICATION SYSTEM ---
+function showToast(message, type = 'info') {
+  let container = document.getElementById('toast-container');
+  if (!container) {
+    container = document.createElement('div');
+    container.id = 'toast-container';
+    document.body.appendChild(container);
+  }
+
+  const toast = document.createElement('div');
+  toast.className = `toast ${type}`;
+  
+  let icon = 'info';
+  if (type === 'success') icon = 'check_circle';
+  if (type === 'error') icon = 'error_outline';
+
+  toast.innerHTML = `
+    <span class="material-icons-round">${icon}</span>
+    <span>${message}</span>
+  `;
+
+  container.appendChild(toast);
+
+  // Trigger animation
+  requestAnimationFrame(() => {
+    toast.classList.add('show');
+  });
+
+  // Remove after 3 seconds
+  setTimeout(() => {
+    toast.classList.remove('show');
+    setTimeout(() => toast.remove(), 300);
+  }, 4000);
+}
+
+// Replace standard alerts with this globally accessible function
+window.showToast = showToast;
