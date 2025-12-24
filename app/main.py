@@ -275,7 +275,7 @@ def health_check():
 
 @app.get("/")
 def login_page():
-    return FileResponse("app/static/pages/login.html")
+    return FileResponse("app/static/pages/index.html")
 
 @app.get("/profile")
 def profile_page():
@@ -292,6 +292,14 @@ def pricing_page():
 @app.get("/result/{resume_id}")
 def result_page(resume_id: int):
     return FileResponse("app/static/pages/result.html")
+
+@app.get("/robots.txt")
+def robots():
+    return FileResponse("app/static/robots.txt")
+
+@app.get("/sitemap.xml")
+def sitemap():
+    return FileResponse("app/static/sitemap.xml")
 
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 

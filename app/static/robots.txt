@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /result/
+Disallow: /api/
+Sitemap: https://myresumematch.com//sitemap.xml
