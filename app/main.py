@@ -10,8 +10,9 @@ from fastapi.responses import FileResponse
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from app.api.profile import router as profile_router
 from app.api.billing import router as billing_router
+from sqlalchemy.orm import Session
 
-from app.database import engine, Base
+from app.database import engine, Base, get_db
 from app.models.profile import Profile
 from app.models.payment import Payment
 
@@ -65,7 +66,7 @@ class ResumeInput(BaseModel):
     portfolio: str | None = ""
     
 @app.post("/api/generate-resume")
-def generate_resume(data: ResumeInput, email: str = Depends(get_verified_email)):
+def generate_resume(data: ResumeInput, email: str = Depends(get_verified_email), db: Session = Depends(get_db)):
     """
     Generate an optimized resume. Email is extracted from verified Google token.
     🔒 SECURITY: Email comes from verified JWT token, never from request body.
@@ -140,9 +141,10 @@ def generate_resume(data: ResumeInput, email: str = Depends(get_verified_email))
     💻 TECHNICAL OUTPUT RULES:
     1. **Output ONLY HTML.** No markdown blocks, no ```html``` wrapper, no explanations.
     2. **Embedded CSS:** All CSS must be inside <style> tags within the HTML.
-    3. **Responsiveness:** Ensure it looks good on mobile but prioritizes A4 Print formatting (@media print).
-    4. **Structure:** Use semantic tags (<header>, <section>, <ul>, <li>).
-    5. **Do Not add Page Borders or shadows in the css design**
+    3. **NO SCRIPTS:** Do not include any <script> tags or JavaScript.
+    4. **Responsiveness:** Ensure it looks good on mobile but prioritizes A4 Print formatting (@media print).
+    5. **Structure:** Use semantic tags (<header>, <section>, <ul>, <li>).
+    6. **Do Not add Page Borders or shadows in the css design**
 
     Format your response EXACTLY like this:
     ===RESUME_HTML===

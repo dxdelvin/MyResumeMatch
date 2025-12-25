@@ -11,7 +11,9 @@ from app.services.credits import (
     deduct_credit_atomic, 
     refund_credit,
     GENERATE_COST,
-    CHAR_LIMIT_COVER_LETTER_EXTRA
+    CHAR_LIMIT_COVER_LETTER_EXTRA,
+    CHAR_LIMIT_RESUME_EXPERIENCE, 
+    CHAR_LIMIT_JOB_DESCRIPTION
 )
 from app.models.profile import Profile
 
@@ -39,6 +41,12 @@ def generate_cl(data: CoverLetterInput, email: str = Depends(get_verified_email)
     
     if len(data.highlight or "") > CHAR_LIMIT_COVER_LETTER_EXTRA:
         raise HTTPException(status_code=400, detail="Highlight story is too long.")
+    
+    if len(data.resume_text) > CHAR_LIMIT_RESUME_EXPERIENCE:
+        raise HTTPException(status_code=400, detail="Your Text is too long.")
+
+    if len(data.job_description) > CHAR_LIMIT_JOB_DESCRIPTION:
+        raise HTTPException(status_code=400, detail="Job description is too long.")
     
     # ✅ VALIDATION 2: Credits
     if not has_credits(db, email, GENERATE_COST):
@@ -82,6 +90,8 @@ def generate_cl(data: CoverLetterInput, email: str = Depends(get_verified_email)
     
     Output format: Just the HTML string starting with <style>...
     """
+    manager_name = data.hiring_manager.strip() if data.hiring_manager else "Hiring Manager"
+    if not manager_name: manager_name = "Hiring Manager"
 
     user_prompt = f"""
     TARGET JOB DESCRIPTION: 
@@ -93,7 +103,7 @@ def generate_cl(data: CoverLetterInput, email: str = Depends(get_verified_email)
     ---
     USER INPUTS (USE THESE TO DRIVE THE NARRATIVE):
     
-    1. Hiring Manager: {data.hiring_manager}
+    1. Hiring Manager: {manager_name}
     
     2. THE HOOK (Why this company?): 
     "{data.motivation}"

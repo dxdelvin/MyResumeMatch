@@ -18,6 +18,7 @@ from pydantic import BaseModel
 router = APIRouter(prefix="/api", tags=["refine"])
 
 client = OpenAI(api_key=os.getenv("OPEN_API_KEY"))
+CHAR_LIMIT_HTML_SAFETY = 30000
 
 class RefineRequest(BaseModel):
     html: str
@@ -37,6 +38,12 @@ def refine_resume(data: RefineRequest, email: str = Depends(get_verified_email),
             detail=f"Your instruction exceeds {CHAR_LIMIT_ASK_AI_ADJUST} characters. Please be more concise."
         )
     
+    if len(data.html) > CHAR_LIMIT_HTML_SAFETY:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Resume is too large to process ({len(data.html)} chars)."
+        )
+        
     # ✅ VALIDATION 2: Check if user has credits
     if not has_credits(db, email, REFINE_COST):
         raise HTTPException(
@@ -77,12 +84,13 @@ def refine_resume(data: RefineRequest, email: str = Depends(get_verified_email),
 
     try:
         response = client.chat.completions.create(
-            model="gpt-4o",
+            model="gpt-4o-mini",
             messages=[
                 {"role": "system", "content": "You refine resumes/cover letters without changing structure."},
                 {"role": "user", "content": prompt}
             ],
-            max_completion_tokens=5000,
+            temperature=0.2,
+            max_tokens=5000,
         )
         updated_html = response.choices[0].message.content.strip()
         updated_html = updated_html.replace('```html', '').replace('```', '').strip()

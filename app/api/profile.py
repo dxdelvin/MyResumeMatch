@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
-from app.database import SessionLocal
+from app.database import get_db, SessionLocal
 from app.models.profile import Profile
 from app.dependencies import get_verified_email
 from app.models.payment import Payment
@@ -19,9 +19,7 @@ class ProfileRequest(BaseModel):
 
 
 @router.get("/profile")
-def get_profile(email: str = Depends(get_verified_email)):
-    db: Session = SessionLocal()
-
+def get_profile(email: str = Depends(get_verified_email), db: Session = Depends(get_db)):
     profile = db.query(Profile).filter(Profile.email == email).first()
     
     # Fetch last 5 payments
@@ -37,7 +35,6 @@ def get_profile(email: str = Depends(get_verified_email)):
             "plan": p.plan_name.title()
         })
 
-    db.close()
 
     if not profile:
         return None
@@ -55,12 +52,10 @@ def get_profile(email: str = Depends(get_verified_email)):
 
 
 @router.post("/profile")
-def save_profile(data: ProfileRequest, email: str = Depends(get_verified_email)):
+def save_profile(data: ProfileRequest, email: str = Depends(get_verified_email), db: Session = Depends(get_db)):
     """
     Save/update user profile. Email is extracted from verified Google token.
     """
-    db: Session = SessionLocal()
-
     profile = db.query(Profile).filter(Profile.email == email).first()
 
     if profile:
@@ -85,7 +80,6 @@ def save_profile(data: ProfileRequest, email: str = Depends(get_verified_email))
 
     db.commit()
     db.refresh(profile)
-    db.close()
 
     return {
         "message": "Profile saved successfully",

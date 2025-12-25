@@ -52,9 +52,23 @@
 
   <section class="editor-pane">
     
-    <div class="pane-header">
-      <h2>Builder Studio</h2>
-      <p class="modal-subtitle">Use Desktop for best experience</p>
+    <div class="pane-header" style="display: flex; justify-content: space-between; align-items: center;">
+      <div>
+        <h2>Builder Studio</h2>
+        <p class="modal-subtitle">AI-Powered Resume Architect</p>
+      </div>
+      
+      <div style="display: flex; gap: 8px;">
+        <input type="file" id="jsonUpload" style="display:none" accept=".json" onchange="importSession(event)">
+        
+        <button onclick="triggerImport()" class="btn-ghost" style="font-size: 0.8rem; padding: 6px 12px;" title="Load Progress">
+            <span class="material-icons-round" style="font-size: 16px; margin-right: 4px;">upload</span> Load
+        </button>
+        
+        <button onclick="exportSession()" class="btn-ghost" style="font-size: 0.8rem; padding: 6px 12px;" title="Save Progress">
+            <span class="material-icons-round" style="font-size: 16px; margin-right: 4px;">save</span> Save
+        </button>
+      </div>
     </div>
 
     <div class="editor-scroll-content">

@@ -1384,3 +1384,105 @@ function printActiveDocument() {
     printWindow.close();
   }, 500);
 }
+
+
+
+/*************************************************
+ * SERVERLESS SAVE SYSTEM (JSON Import/Export)
+ * Cost-Free State Management
+ *************************************************/
+
+function exportSession() {
+    // 1. Gather all data
+    const sessionData = {
+        version: "1.0",
+        timestamp: new Date().toISOString(),
+        inputs: {
+            resumeText: document.getElementById("resumeText").value,
+            jobDescription: document.getElementById("jobDescription").value,
+            style: document.getElementById("styleSelect").value
+        },
+        outputs: {
+            resumeHtml: document.getElementById("output").innerHTML,
+            coverLetterHtml: document.getElementById("output-cl").innerHTML,
+            atsScore: document.getElementById("atsScore").innerText
+        }
+    };
+
+    // 2. Create the file
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(sessionData));
+    const downloadAnchorNode = document.createElement('a');
+    
+    // 3. Trigger Download
+    const fileName = `resume-backup-${new Date().toISOString().slice(0,10)}.json`;
+    downloadAnchorNode.setAttribute("href", dataStr);
+    downloadAnchorNode.setAttribute("download", fileName);
+    document.body.appendChild(downloadAnchorNode); // Required for firefox
+    downloadAnchorNode.click();
+    downloadAnchorNode.remove();
+    
+    showToast("Progress saved to file! 💾", "success");
+}
+
+function triggerImport() {
+    // Programmatically click the hidden file input
+    document.getElementById('jsonUpload').click();
+}
+
+function importSession(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    
+    reader.onload = function(e) {
+        try {
+            const data = JSON.parse(e.target.result);
+
+            // 1. Restore Inputs
+            if (data.inputs) {
+                if(data.inputs.resumeText) document.getElementById("resumeText").value = data.inputs.resumeText;
+                if(data.inputs.jobDescription) document.getElementById("jobDescription").value = data.inputs.jobDescription;
+                if(data.inputs.style) document.getElementById("styleSelect").value = data.inputs.style;
+                
+                // Trigger counters
+                setupCharacterCounters(); // Re-run to update colors/counts
+            }
+
+            // 2. Restore Outputs
+            if (data.outputs) {
+                const output = document.getElementById("output");
+                const outputCL = document.getElementById("output-cl");
+                const atsScore = document.getElementById("atsScore");
+
+                if (data.outputs.resumeHtml && !data.outputs.resumeHtml.includes("empty-state")) {
+                    output.innerHTML = data.outputs.resumeHtml;
+                    output.contentEditable = true;
+                    // Show refine bar
+                    document.getElementById("aiRefineBar").style.display = "block";
+                }
+
+                if (data.outputs.coverLetterHtml && !data.outputs.coverLetterHtml.includes("empty-state")) {
+                    outputCL.innerHTML = data.outputs.coverLetterHtml;
+                    outputCL.contentEditable = true;
+                }
+
+                if (data.outputs.atsScore && data.outputs.atsScore !== "--") {
+                    atsScore.innerText = data.outputs.atsScore;
+                    updateGauge(data.outputs.atsScore);
+                }
+            }
+
+            showToast("Session loaded successfully! 🚀", "success");
+
+        } catch (err) {
+            console.error(err);
+            showToast("Invalid JSON file.", "error");
+        }
+    };
+
+    reader.readAsText(file);
+    
+    // Reset input so we can upload the same file again if needed
+    event.target.value = '';
+}
