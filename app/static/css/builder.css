@@ -276,7 +276,7 @@ textarea:focus, .modern-select:focus {
 
 /* Cover letter specific: no padding since it has its own margins */
 #output-cl {
-  padding: 2px 0;
+    padding: 35px 60px;   
 }
 
 /* Material Icon Alignment Fix */

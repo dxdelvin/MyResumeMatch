@@ -375,7 +375,7 @@ footer {
     border: 1px solid rgba(255,255,255,0.1);
 }
 
-.video-wrapper iframe {
+.video-wrapper iframe, .video-wrapper video {
     position: absolute;
     top: 0;
     left: 0;
