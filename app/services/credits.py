@@ -3,7 +3,7 @@ from fastapi import HTTPException
 from app.models.profile import Profile
 
 GENERATE_COST = 1.0  # Resume/Cover Letter generation
-REFINE_COST = 0.5    # AI refinement cost
+REFINE_COST = 0.2    # AI refinement cost
 
 # ✅ CHARACTER LIMITS (for security & quality control)
 CHAR_LIMIT_RESUME_EXPERIENCE = 6000  # Your Experience textarea
