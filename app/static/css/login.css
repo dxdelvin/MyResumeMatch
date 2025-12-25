@@ -337,9 +337,10 @@ footer {
     display: flex;
     flex-direction: column;
     align-items: center;
+    padding: 0 5px;
   }
   
-  .hero h1 { font-size: 2.5rem; }
+  .hero h1 { font-size: 2.5rem; } 
   
   /* 🔥 THE BIG CHANGE: Hide the entire visual side (Card + Blob + Badges) */
   .hero-visual {

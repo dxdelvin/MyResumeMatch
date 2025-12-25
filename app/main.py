@@ -116,30 +116,29 @@ def generate_resume(data: ResumeInput, email: str = Depends(get_verified_email),
     🎨 STYLE DEFINITIONS (STRICTLY FOLLOW THE CSS RULES FOR THE SELECTED STYLE):
 
     1. "Harvard" (The Classic / Academic)
-       - Use the Famous Harvard CSS Style as reference
+       - Use the Famous Harvard CSS Style as reference and make sure its clean and professional.
+       - LAYOUT: Single column, clear sections with horizontal rules.
 
     2. "Tech" (The Modern / Startup)
-       - LAYOUT: Clean single column or subtle grid.
-       - TYPOGRAPHY: Modern Sans-Serif (Inter, Roboto, Helvetica, System UI).
-       - DESIGN ELEMENTS: Use "Pills" or "Tags" for Skills (e.g., background: #e0e7ff; color: #3730a3; padding: 4px 8px; border-radius: 4px;).
-       - COLORS: Dark grey text (#1f2937) with subtle Blue/Indigo accents (#4f46e5) for headers or links.
+    -  LAYOUT: You can go with any One Column or Two-column layout with sidebar depending what feels right.
+        - Use Cool Css Designs and Make sure its visually appealing and modern.
+       - COLORS: Light backgrounds with accent colors.
+         - TYPOGRAPHY: Modern sans-serif fonts (e.g., Roboto, Open Sans).
        - VIBE: Silicon Valley, Software Engineer, Product Manager.
 
     3. "Creative" (The Designer / Two-Column)
        - LAYOUT: STRICT Two-Column Layout (CSS Grid or Flexbox).
-         - Left/Right Sidebar (30% width) for Skills, Contact, Education.
-         - Main Content (70% width) for Experience and Summary.
-       - COLORS: Use a soft background color for the sidebar (e.g., #f3f4f6 or #1e293b with white text).
-       - TYPOGRAPHY: Bold, distinct headers. Sans-serif.
+       - COLORS: Use a soft background color for the sidebar.
+       - TYPOGRAPHY: Sans-serif.
+       No Over the top designs keep it minimal yet creative. and professional.
        - VIBE: UI/UX Designer, Marketing, Creative Director.
 
     ---
     ✍️ CONTENT OPTIMIZATION RULES:
     1. **ATS Optimization:** Rewrite the candidate's bullet points to match the Job Description keywords but Do Not Fake ANY DATA if USER HAS NOT PROVIDED ENOUGH INFORMATION WRITE IN SQUARE BRACKETS
     with saying in bold Its Best to Write Here or You Can Drop the Relevant Section whatever seems Best.
-    2. **Impact First:** Use the "Action Verb + Task + Result" formula. (e.g., "Reduced latency by 40%..." instead of "Worked on optimization") Do Not Try to Fake the DATA Too much and be realistic according to candidate.
-    3. **No Fluff:** Remove generic phrases like "Hard worker". Replace with hard skills.
-    4. **Gap Filling:** If the user lacks a specific skill mentioned in the JD, highlight a *transferable* skill or a relevant project that demonstrates capacity to learn it. DO NOT LIE.
+    2. **Impact First:** Use the "Action Verb + Task + Result" formula. (e.g., "Reduced latency by 40%..." instead of "Worked on optimization") Dont Over Exaggerate with numbers be realistic.
+    3. **Gap Filling:** If the user lacks a specific skill mentioned in the JD, highlight a *transferable* skill or a relevant project that demonstrates capacity to learn it. DO NOT LIE.
 
     ---
     💻 TECHNICAL OUTPUT RULES:
@@ -170,7 +169,7 @@ def generate_resume(data: ResumeInput, email: str = Depends(get_verified_email),
     user_prompt = f"""
     GENERATE THIS RESUME:
     
-    🔹 SELECTED STYLE: {data.style} (Apply the {data.style} CSS rules strictly!)
+    🔹 SELECTED STYLE: {data.style} (Apply the {data.style} CSS rules!)
     
     🔹 CANDIDATE INFO:
     {profile_info}
