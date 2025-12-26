@@ -912,3 +912,73 @@ textarea:focus, .modern-select:focus {
     color: #2563eb;
     text-decoration: underline;
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  /* =========================================
+   ACCESSIBILITY CONTRAST FIXES
+   ========================================= */
+
+/* 1. Fix Character Counters 
+   The JS uses a light green (#10B981) which fails accessibility. 
+   We use !important to override the inline style with a darker green.
+*/
+#resumeCounter, 
+#jobCounter,
+#refineCounter,
+#clMotivationCounter, 
+#clHighlightCounter {
+    color: #15803d !important; /* Dark Green (Green-700) - Passes WCAG AA */
+    font-weight: 500;
+}
+
+/* 2. Fix View Tabs (Resume / Cover Letter)
+   Inactive tabs were likely too light gray.
+*/
+.view-tab {
+    color: #4b5563; /* Gray-600 */
+    font-weight: 500;
+}
+
+.view-tab:hover {
+    color: #111827; /* Gray-900 */
+    background: #f3f4f6;
+}
+
+.view-tab.active {
+    color: #2563eb; /* Blue-600 */
+    background: #eff6ff;
+    border-color: #2563eb;
+}
+
+/* 3. Fix Credits Display Text 
+   Make the "Credits Available" text darker.
+*/
+.credits-display {
+    color: #374151; /* Gray-700 */
+    font-weight: 600;
+}
+
+/* Optional: Darken the lightning bolt icon for better visibility */
+.credits-display .material-icons-round {
+    color: #d97706 !important; /* Darker Amber */
+}
+
+/* 4. Guest Mode Badge inside Credits */
+#creditCount {
+    color: #111827; /* Gray-900 (Nearly Black) */
+}

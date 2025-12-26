@@ -3,8 +3,45 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Editor | ResumeAI Studio</title>
-  <meta name="robots" content="noindex, nofollow" />
+  
+  <title>Free AI Resume Editor & Builder | ResumeAI Studio</title>
+  
+  <meta name="robots" content="index, follow" />
+  
+  <meta name="description" content="Use our free AI Resume Editor to build, refine, and format your CV. Import PDFs, optimize for ATS, and generate cover letters matching specific job descriptions instantly." />
+  
+  <meta name="keywords" content="AI resume editor, free resume builder, ATS check, CV formatter, PDF resume import, cover letter generator" />
+  
+  <link rel="canonical" href="https://myresumematch.com/builder" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://myresumematch.com/builder" />
+  <meta property="og:title" content="AI Resume Editor - Build ATS-Ready CVs Free" />
+  <meta property="og:description" content="Edit, Refine, and Perfect your resume with AI. Import existing PDFs or start from scratch." />
+  <meta property="og:image" content="https://myresumematch.com/static/img/og-image.jpg" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="AI Resume Editor | ResumeAI" />
+  <meta name="twitter:description" content="The fastest way to tailor your resume to a job description." />
+  <meta name="twitter:image" content="https://myresumematch.com/static/img/og-image.jpg" />
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "ResumeAI Builder Studio",
+    "url": "https://myresumematch.com/builder",
+    "description": "An AI-powered online editor to create, format, and optimize resumes for ATS systems.",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "Web",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "featureList": "PDF Import, AI Text Refinement, ATS Scoring, Cover Letter Generation"
+  }
+  </script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -13,23 +50,19 @@
   <link rel="stylesheet" href="/static/css/navbar.css">
   <link rel="stylesheet" href="/static/css/builder.css">
   <link rel="stylesheet" href="/static/css/styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%230a66c2%22/><text x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22central%22 text-anchor=%22middle%22 font-family=%22sans-serif%22 font-weight=%22900%22 font-size=%2250%22 fill=%22white%22>AI</text></svg>">
 
   <script src="https://accounts.google.com/gsi/client" async defer></script>
   <script src="https://cdn.jsdelivr.net/npm/jwt-decode@3.1.2/build/jwt-decode.min.js"></script>
-
-
-<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%230a66c2%22/><text x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22central%22 text-anchor=%22middle%22 font-family=%22sans-serif%22 font-weight=%22900%22 font-size=%2250%22 fill=%22white%22>AI</text></svg>">
-  <!-- PDF.js Library -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-5DS9BK1BGF"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-5DS9BK1BGF');
-</script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-5DS9BK1BGF');
+  </script>
 </head>
 <body style="padding:0 !important;">
 
@@ -78,7 +111,7 @@
         <label class="input-label">
           <span><span class="material-icons-round" style="font-size:16px; vertical-align:middle;">palette</span> Visual Style</span>
         </label>
-        <select id="styleSelect" class="modern-select">
+        <select id="styleSelect" class="modern-select" for="styleSelect">
           <option value="Harvard">Harvard Standard (Clean)</option>
           <option value="Tech">Tech Modern (Bold)</option>
           <option value="Creative">Creative (Two-Column)</option>
@@ -275,7 +308,7 @@
 </div>
 
 <script src="/static/js/app.js"></script>
-<script src="/static/js/common.js"></script>
+<script defer src="/static/js/common.js"></script>
 
 </body>
 </html>
