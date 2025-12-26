@@ -1,3 +1,9 @@
+const PRICING = {
+  inr: { symbol: "₹", basic: "129", popular: "249", pro: "499" },
+  eur: { symbol: "€", basic: "3.99", popular: "4.99", pro: "9.99" }
+};
+
+
 async function selectPlan(plan) {
   const user = JSON.parse(localStorage.getItem("user"));
 
@@ -16,8 +22,8 @@ async function selectPlan(plan) {
         "Authorization": `Bearer ${user.token}` // 🔒 SECURE: JWT token
       },
       body: JSON.stringify({
-        plan: plan,  // basic | popular | pro
-        // ✅ NO email field - it comes from JWT token
+        plan: plan,
+        currency: currentCurrency,  
       }),
     });
 
@@ -29,12 +35,9 @@ async function selectPlan(plan) {
     }
 
     const data = await res.json();
-
-    // Redirect to Stripe Checkout
     window.location.href = data.checkout_url;
 
   } catch (err) {
-    console.error("Network error:", err);
     alert("Something went wrong");
   }
 }
@@ -43,8 +46,10 @@ async function selectPlan(plan) {
 
 // Add some interactive effects
 document.addEventListener('DOMContentLoaded', function() {
-  // Check for payment status on pricing page
+  console.log(detectRegion())
+  detectRegion();
   checkPaymentStatus();
+  setupHoverEffects();
 
   // Add hover effects to pricing cards
   const cards = document.querySelectorAll('.pricing-card');
@@ -64,3 +69,24 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 
+function detectRegion() {
+  const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  
+  // If timezone is Indian Standard Time (IST)
+  if (timeZone === 'Asia/Calcutta' || timeZone === 'Asia/Kolkata') {
+    setCurrency('inr');
+    showToast("🇮🇳 Special pricing applied for India!", "success");
+  } else {
+    setCurrency('eur');
+  }
+}
+
+function setCurrency(currency) {
+  currentCurrency = currency;
+  const p = PRICING[currency];
+
+  // Update HTML Elements (You need to add these IDs to HTML in Step 4)
+  if(document.getElementById('price-basic')) document.getElementById('price-basic').innerText = p.symbol + p.basic;
+  if(document.getElementById('price-popular')) document.getElementById('price-popular').innerText = p.symbol + p.popular;
+  if(document.getElementById('price-pro')) document.getElementById('price-pro').innerText = p.symbol + p.pro;
+}

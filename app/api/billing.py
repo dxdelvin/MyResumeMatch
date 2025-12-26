@@ -19,21 +19,31 @@ router = APIRouter(prefix="/api/billing", tags=["billing"])
 # 🔒 Credit packs (single source of truth)
 CREDIT_PACKS = {
     "basic": {
-        "price_id": "price_1ShVSu7n4jiFDpJAU3hvl7Ev",
-        "credits": 80
+        "credits": 80,
+        "prices": {
+            "eur": "price_1ShVSu7n4jiFDpJAU3hvl7Ev", 
+            "inr": "price_1SihQu7n4jiFDpJA6Mo3MC30" 
+        }
     },
     "popular": {
-        "price_id": "price_1ShW3G7n4jiFDpJAx9e2gs2n",
-        "credits": 250
+        "credits": 250,
+        "prices": {
+            "eur": "price_1ShW3G7n4jiFDpJAx9e2gs2n",
+            "inr": "price_1SihSh7n4jiFDpJAN2iCUmIT" 
+        }
     },
     "pro": {
-        "price_id": "price_1ShVUG7n4jiFDpJAq3yHMaGE",
-        "credits": 500
+        "credits": 600,
+        "prices": {
+            "eur": "price_1ShVUG7n4jiFDpJAq3yHMaGE",
+            "inr": "price_1SihVO7n4jiFDpJA6XFuuKaG" 
+        }
     }
 }
 
 class CheckoutRequest(BaseModel):
     plan: str
+    currency: str = "eur"
 
 
 @router.post("/create-checkout-session")
@@ -47,15 +57,19 @@ def create_checkout_session(
     🔒 SECURITY: Email comes from verified JWT token, never from request body.
     """
     plan = data.plan
+    currency = data.currency.lower()
 
     if plan not in CREDIT_PACKS:
         raise HTTPException(status_code=400, detail="Invalid plan")
+    
+    if currency not in CREDIT_PACKS[plan]["prices"]:
+        currency = "eur"
 
     user = db.query(Profile).filter(Profile.email == email).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
 
-    price_id = CREDIT_PACKS[plan]["price_id"]
+    price_id = CREDIT_PACKS[plan]["prices"][currency]
     
     base_url = os.getenv("BASE_URL", "http://localhost:8000")
 
@@ -71,7 +85,8 @@ def create_checkout_session(
         cancel_url=f"{base_url}/pricing?payment=cancelled",
         metadata={
             "pack_id": plan,
-            "email": email
+            "email": email,
+            "currency": currency
         }
     )
 
