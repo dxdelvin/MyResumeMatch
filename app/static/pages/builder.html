@@ -140,11 +140,15 @@
 
     <div class="editor-footer">
       
+      <div style="font-size: 11px; color: #999; margin-bottom: 3px;">
+         It doesn't lie - refine to improve ATS score (resumes)
+      </div>
+
       <div class="credits-display">
          <span class="material-icons-round" style="font-size:14px; color:#F59E0B;">bolt</span>
          <span id="creditCount">-</span> Credits Available
       </div>
-
+      
       <button class="btn-magic" id="generateBtn" onclick="handleMainGenerate()">
         <span class="material-icons-round">auto_awesome</span>
         Generate Resume
@@ -309,6 +313,8 @@
 
 <script src="/static/js/app.js"></script>
 <script defer src="/static/js/common.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
 
 </body>
 </html>

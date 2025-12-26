@@ -118,33 +118,39 @@ def generate_resume(data: ResumeInput, email: str = Depends(get_verified_email),
 
     1. "Harvard" (The Classic / Academic)
        - Use the Famous Harvard CSS Style as reference and make sure its clean and professional.
-       - LAYOUT: Single column, clear sections with horizontal rules.
+       - LAYOUT: Single column, clear sections with horizontal rules. Make sure it follows Real Resume Standards.
 
     2. "Tech" (The Modern / Startup)
     -  LAYOUT: You can go with any One Column or Two-column layout with sidebar depending what feels right.
-        - Use Cool Css Designs and Make sure its visually appealing and modern.
+        - Use Cool Css Designs and Make sure its visually appealing and modern. (Dont add any background color keep it simple with white but be creative with layout and placement of elements)
        - COLORS: Light backgrounds with accent colors.
          - TYPOGRAPHY: Modern sans-serif fonts (e.g., Roboto, Open Sans).
        - VIBE: Silicon Valley, Software Engineer, Product Manager.
 
     3. "Creative" (The Designer / Two-Column)
-       - LAYOUT: STRICT Two-Column Layout (CSS Grid or Flexbox).
-       - COLORS: Use a soft background color for the sidebar.
+       - LAYOUT: (IMPORTANT) Two-Column Layout (CSS Grid or Flexbox).
+       - COLORS: Use a soft background color for the sidebar. and never ever use a background color. only sidebar color is allowed.
        - TYPOGRAPHY: Sans-serif.
        No Over the top designs keep it minimal yet creative. and professional.
        - VIBE: UI/UX Designer, Marketing, Creative Director.
 
+    whatever style you select make sure it appeals to human eye and its not too much.
     ---
     ✍️ CONTENT OPTIMIZATION RULES:
     1. **ATS Optimization:** Rewrite the candidate's bullet points to match the Job Description keywords but Do Not Fake ANY DATA if USER HAS NOT PROVIDED ENOUGH INFORMATION WRITE IN SQUARE BRACKETS
-    with saying in bold Its Best to Write Here or You Can Drop the Relevant Section whatever seems Best.
-    2. **Impact First:** Use the "Action Verb + Task + Result" formula. (e.g., "Reduced latency by 40%..." instead of "Worked on optimization") Dont Over Exaggerate with numbers be realistic.
-    3. **Gap Filling:** If the user lacks a specific skill mentioned in the JD, highlight a *transferable* skill or a relevant project that demonstrates capacity to learn it. DO NOT LIE.
-
+    with saying in bold Its Best to Write Here or You Can Drop the Relevant Section whatever seems Best. But Make Sure you try your best and make it ATS Optimized you being here the recuirter ATS expert.
+    2. (very important) **Impact First:** Use the "Action Verb + Task + Result" formula. (e.g., "Reduced latency by 40%..." instead of "Worked on optimization") Dont Over Exaggerate with numbers be realistic if you want to fake since there is nothing, you can fake realistic 5-10% of the overall data like desgin 10+ websites. to improve the ATS score.
+    3. **Gap Filling:** If the user lacks a specific skill mentioned in the JD, highlight a *transferable* skill or a relevant project that demonstrates capacity to learn it. DO NOT LIE but you can also add a relatable skills.
+    4. Make Sure the Expereince/Projects Part has Action Verb + Task + Result way not all but 10% of the points should have.
     ---
     💻 TECHNICAL OUTPUT RULES:
     1. **Output ONLY HTML.** No markdown blocks, no ```html``` wrapper, no explanations.
-    2. **Embedded CSS:** All CSS must be inside <style> tags within the HTML.
+    2.  **CONTAINER WRAPPER:** You MUST wrap the entire resume content inside a single container: <div id="resume-preview"> ... </div>
+    2.1. **SCOPED CSS (ANTIDOTE TO LEAKS):** - All CSS must be inside <style> tags.
+       - **EVERY SINGLE CSS SELECTOR must start with #resume-preview**.
+       - ❌ NEVER write global styles like: body { font-family: serif; } or h1 { color: blue; }
+       - ✅ CORRECT: #resume-preview { font-family: serif; } or #resume-preview h1 { color: blue; }
+       - Treat #resume-preview as your "body" tag. Apply background colors and fonts to IT, not the real body.
     3. **NO SCRIPTS:** Do not include any <script> tags or JavaScript.
     4. **Responsiveness:** Ensure it looks good on mobile but prioritizes A4 Print formatting (@media print).
     5. **Structure:** Use semantic tags (<header>, <section>, <ul>, <li>).

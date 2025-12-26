@@ -1415,82 +1415,45 @@ async function updateCoverLetterWithAI() {
 
 
 /**
- * 🖨️ UNIVERSAL PRINT FUNCTION
- * (Relaxed Margins Version)
+ * 📥 DIRECT DOWNLOAD (html2pdf)
+ * Uses JavaScript to render the DOM as a PDF file.
  */
 function printActiveDocument() {
-  // 1. Determine which content to print
-  let contentId, title;
-  
-  if (activeView === 'resume') {
-    contentId = 'output';
-    title = 'Resume';
-  } else {
-    contentId = 'output-cl';
-    title = 'Cover Letter';
-  }
+    // 1. Identify content
+    let contentId = activeView === 'resume' ? 'output' : 'output-cl';
+    const element = document.getElementById(contentId);
+    
+    // Safety Check
+    if (!element || element.innerText.trim() === "") {
+        showToast("Nothing to download yet!", "error");
+        return;
+    }
 
-  const contentElement = document.getElementById(contentId);
-  
-  // 2. Safety Check
-  const hasEmptyState = contentElement ? contentElement.querySelector('.empty-state') : null;
-  
-  if (!contentElement || hasEmptyState || contentElement.innerText.trim() === "") {
-      showToast(`Your ${title} is not ready yet. Please generate it first.`, "error");
-      return;
-  }
+    // 2. Show Loading State
+    const btn = document.querySelector('#previewActions .btn-ghost');
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<span class="material-icons-round spinning">hourglass_empty</span> Saving...';
 
-  // 3. Open Print Window
-  const printWindow = window.open("", "_blank");
-  
-  // 4. Write the HTML
-  printWindow.document.write(`
-    <!DOCTYPE html>
-    <html lang="en">
-      <head>
-        <title>Print ${title}</title>
-        <meta charset="UTF-8">
-        <style>
-          /* RELAXED A4 SIZE: 
-             We removed 'margin: 0' so the browser/printer handles the margins.
-             This prevents content from being cut off on standard printers.
-          */
-          @page {
-            size: A4; 
-          }
-          
-          body {
-            padding: 0;
-            -webkit-print-color-adjust: exact; 
-            print-color-adjust: exact;
-            font-family: sans-serif;
-          }
+    // 3. Configuration
+    const opt = {
+      margin:       0, // We handle margins via CSS padding in .paper-a4
+      filename:     'My_Resume.pdf',
+      image:        { type: 'jpeg', quality: 0.98 },
+      html2canvas:  { scale: 2, useCORS: true, letterRendering: true }, 
+      jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
 
-          /* Content scales to fit the printable area */
-          .paper-a4 {
-            width: 100%;
-            max-width: 210mm;
-            margin: 0 auto;
-            box-shadow: none; 
-          }
-        </style>
-      </head>
-      <body>
-        ${contentElement.innerHTML}
-      </body>
-    </html>
-  `);
-
-  printWindow.document.close();
-  printWindow.focus();
-
-  // 5. Trigger Print
-  setTimeout(() => {
-    printWindow.print();
-    printWindow.close();
-  }, 500);
+    // 4. Generate & Save
+    html2pdf().set(opt).from(element).save().then(() => {
+        // Reset Button
+        btn.innerHTML = originalText;
+        showToast("PDF Downloaded!", "success");
+    }).catch(err => {
+        console.error(err);
+        btn.innerHTML = originalText;
+        showToast("Download failed. Try the Print button.", "error");
+    });
 }
-
 
 
 /*************************************************
