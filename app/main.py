@@ -205,12 +205,13 @@ def generate_resume(data: ResumeInput, email: str = Depends(get_verified_email),
 
     try:
         response = client.chat.completions.create(
-            model="gpt-4o",  # Using the smartest model for design + logic
+            model="gpt-5.1",  # Using the smartest model for design + logic
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_prompt}
             ],
             temperature=0.7, # Slightly creative to allow for better phrasing
+            max_tokens=6000,
         )
 
         content = response.choices[0].message.content
