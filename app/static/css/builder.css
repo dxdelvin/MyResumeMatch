@@ -485,6 +485,9 @@ textarea:focus,
 
 /* --- MOBILE OPTIMIZATIONS (CAPITALIST MODE) --- */
 @media (max-width: 1000px) {
+  .print-btn {
+    display: none;
+  }
 
   /* 1. Reset Global Layout for Vertical Scroll */
   body {
