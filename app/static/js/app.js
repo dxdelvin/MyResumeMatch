@@ -971,7 +971,7 @@ async function updateResumeWithAI() {
     const currentHTML = document.getElementById('output').innerHTML;
     const jobDescription = document.getElementById("jobDescription").value.trim();
     const currentScoreEl = document.getElementById("atsScore");
-    const currentScore = currentScoreEl ? (parseInt(currentScoreEl.innerText) || 0) : 0;
+    const currentScore = currentScoreEl ? (parseFloat(currentScoreEl.innerText) || 0) : 0;
     // 3. Send to Backend
     // 🔒 SECURE: No email in body, use JWT token
     const response = await fetch("/api/refine-resume", { 
@@ -1018,15 +1018,16 @@ async function updateResumeWithAI() {
     if (data.ats_score !== undefined && data.ats_score !== null) {
         const atsScoreEl = document.getElementById("atsScore");
         if (atsScoreEl) {
-             atsScoreEl.innerText = data.ats_score;
+             const numericScore = (typeof data.ats_score === 'number') ? data.ats_score : (parseFloat(data.ats_score) || 0);
+             atsScoreEl.innerText = numericScore;
              
              // Update Visuals
-             const level = data.ats_score >= 80 ? "high" : data.ats_score >= 60 ? "medium" : "low";
+             const level = numericScore >= 80 ? "high" : numericScore >= 60 ? "medium" : "low";
              atsScoreEl.parentElement.className = `score-circle ${level}`;
-             if (typeof updateGauge === "function") updateGauge(data.ats_score);
+             if (typeof updateGauge === "function") updateGauge(numericScore);
              
              // Auto-save
-             localStorage.setItem("autosave_score", data.ats_score);
+             localStorage.setItem("autosave_score", numericScore);
         }
         showToast(`Updated! (New Score: ${data.ats_score})`, "success");
     } else {

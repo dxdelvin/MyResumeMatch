@@ -25,48 +25,9 @@ class RefineRequest(BaseModel):
     html: str
     instruction: str
     job_description: str = "" 
-    current_ats_score: int = 0 
+    current_ats_score: float = 0.0 
     type: str = "resume"
     
-
-def internal_calculate_ats_mini(resume_html: str, job_desc: str) -> int:
-    """
-    Internal helper to calculate ATS score cheaply using GPT-4o-mini.
-    """
-    if not job_desc or len(job_desc) < 10:
-        return 0
-
-    # ⚠️ FIX: Do NOT use f-string with HTML because CSS curly braces {} will break it.
-    prompt_intro = """
-    You are a strict ATS Algorithm. 
-    TASK: Calculate a match score (0-100) between the Resume and JD.
-    SCORING RULES:
-    1. EXTRACT keywords from JD.
-    2. COUNT matches in Resume HTML.
-    3. MATH: (Matches / Total Keywords) * 100.
-    4. CAP at 100.
-    
-    OUTPUT: Return ONLY the integer number. No text.
-    """
-    
-    # Safe concatenation
-    full_prompt = prompt_intro + "\n\nRESUME HTML:\n" + resume_html[:15000] + "\n\nJOB DESCRIPTION:\n" + job_desc[:5000]
-    
-    try:
-        response = client.chat.completions.create(
-            model="gpt-4o-mini",
-            messages=[{"role": "user", "content": full_prompt}],
-            temperature=0.0,
-            max_completion_tokens=10,
-        )
-        score_text = response.choices[0].message.content.strip()
-        print(f"💰 ATS Calc Raw Output: {score_text}")
-        # 🛡️ SAFETY: Use Regex to find the number hidden in text
-        match = re.search(r'\d+', score_text)
-        return int(match.group()) if match else 0
-    except Exception as e:
-        print(f"⚠️ ATS Calculation Failed: {e}")
-        return 0
 
 @router.post("/refine-resume")
 def refine_resume(data: RefineRequest, email: str = Depends(get_verified_email), db: Session = Depends(get_db)):
@@ -105,51 +66,84 @@ def refine_resume(data: RefineRequest, email: str = Depends(get_verified_email),
     if data.type == "cover_letter":
         context_instruction = "You are refining a Cover Letter. Maintain the letter format, flow, and professional tone."
 
-    prompt = f"""
-    You are an expert resume editor.
+    job_desc_snippet = (data.job_description or "")[:6000]
+    current_html_snippet = (data.html or "")[:CHAR_LIMIT_HTML_SAFETY]
+    current_score = data.current_ats_score or 0.0
 
-    RULES:
-    - You will receive HTML content.
+    system_prompt = """
+    You are an expert resume/cover-letter editor.
+    You must preserve the HTML structure and styling.
+
+    GLOBAL RULES:
+    - Input is HTML.
     - DO NOT remove structure.
-    - DO NOT invent content.
+    - DO NOT invent new experiences, companies, employers, degrees, certifications, dates, titles, or projects. unless user has mentioned to do it in prompt. 
     - Only modify what the instruction explicitly asks.
     - Preserve formatting, tags, and layout.
-    - Return FULL updated HTML only.
+    - Return ONLY the required format. No markdown and no commentary.
 
-    CONTEXT: {context_instruction}
-
-    INSTRUCTION:
-    {data.instruction}
-
-    CURRENT CONTENT HTML:
-    {data.html}
+    ATS SCORING RULES (only for resumes when a Job Description is provided):
+    - Be strict.
+    - Score must be a decimal number with exactly 2 decimals (example: 73.42). Never return a whole number.
+    - Score range is 0.00 to 100.00.
+    - Compare the UPDATED resume content against the Job Description.
+    - Do not guess. If evidence is missing in the resume, do not award points.
     """
+
+    if data.type == "resume" and job_desc_snippet and len(job_desc_snippet) > 10:
+        prompt = (
+            "CONTEXT: " + context_instruction + "\n\n"
+            "INSTRUCTION:\n" + data.instruction + "\n\n"
+            "CURRENT ATS SCORE (reference only):\n" + str(current_score) + "\n\n"
+            "JOB DESCRIPTION:\n" + job_desc_snippet + "\n\n"
+            "CURRENT CONTENT HTML:\n" + current_html_snippet + "\n\n"
+            "Return your response EXACTLY like this:\n"
+            "===UPDATED_HTML===\n"
+            "[FULL updated HTML here]\n"
+            "===ATS_SCORE===\n"
+            "[A strict decimal score with exactly 2 decimals, 0.00-100.00]\n"
+        )
+    else:
+        prompt = (
+            "CONTEXT: " + context_instruction + "\n\n"
+            "INSTRUCTION:\n" + data.instruction + "\n\n"
+            "CURRENT CONTENT HTML:\n" + current_html_snippet + "\n\n"
+            "Return FULL updated HTML only.\n"
+        )
 
     try:
         response = client.chat.completions.create(
             model="gpt-4o-mini",
             messages=[
-                {"role": "system", "content": "You refine resumes/cover letters without changing structure."},
+                {"role": "system", "content": system_prompt},
                 {"role": "user", "content": prompt}
             ],
             temperature=0.2,
             max_tokens=5000,
         )
-        updated_html = response.choices[0].message.content.strip()
-        updated_html = updated_html.replace('```html', '').replace('```', '').strip()
+        content = response.choices[0].message.content.strip()
+        content = content.replace('```html', '').replace('```', '').strip()
         
         # ✅ VALIDATION 3: Validate we got content back
-        if not updated_html:
+        if not content:
             raise ValueError("Empty response from AI")
-        
+
+        updated_html = content
         new_ats_score = data.current_ats_score
-        
-        if data.type == "resume" and data.job_description and len(data.job_description) > 10:
-            calculated_score = internal_calculate_ats_mini(updated_html, data.job_description)
-            if calculated_score > 0:
-                new_ats_score = calculated_score
+
+        if data.type == "resume" and job_desc_snippet and len(job_desc_snippet) > 10:
+            if "===UPDATED_HTML===" in content and "===ATS_SCORE===" in content:
+                parts = content.split("===ATS_SCORE===")
+                updated_html = parts[0].replace("===UPDATED_HTML===", "").strip()
+                score_text = parts[1].strip() if len(parts) > 1 else ""
+
+                match = re.search(r"(\d+(?:\.\d+)?)", score_text)
+                if match:
+                    parsed = float(match.group(1))
+                    if 0.0 <= parsed <= 100.0:
+                        new_ats_score = round(parsed, 2)
             else:
-                print("⚠️ Calculated score was 0, keeping old score.")
+                print("⚠️ AI did not return ATS delimiter format; keeping previous score.")
         
         # ✅ SUCCESS! Credits already deducted (atomic)
         return {
