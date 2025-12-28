@@ -104,7 +104,7 @@ ALLOWED_ROLES = [
     # Business & Admin
     "administrative-assistant", "customer-service-representative", "project-manager",
     "marketing-manager", "accountant", "sales-representative", "human-resources-manager",
-    "business-analyst", "executive-assistant", "daily-equity"
+    "business-analyst", "executive-assistant", "daily-equity",
     
     # Service & General
     "teacher", "server", "bartender", "driver", "receptionist", "electrician",
