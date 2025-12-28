@@ -35,7 +35,34 @@
   <meta property="og:description" content="Stop paying monthly fees. Pay once, use anytime. AI-powered resume & cover letter generation." />
   <meta property="og:image" content="https://myresumematch.com/static/img/og-image.jpg" />
   <meta property="og:type" content="product" />
-
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [{
+      "@type": "Question",
+      "name": "Is this a subscription?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Unlike other resume builders, ResumeAI is strictly pay-as-you-go. You buy credits once and they never expire. No monthly fees, no hidden charges."
+      }
+    }, {
+      "@type": "Question",
+      "name": "Do credits expire?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Your credits are yours forever. You can use them today or next year."
+      }
+    }, {
+      "@type": "Question",
+      "name": "How much does a resume cost?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A tailored resume generation costs 1 credit. And Refining costs 0.2 credit. We offer packs with 80/250/600 credits, making it significantly cheaper than monthly subscription tools."
+      }
+    }]
+  }
+  </script>
   <script>
     const user = localStorage.getItem("user");
     const isAuthenticated =
@@ -94,7 +121,7 @@
         <li><strong>80</strong> Credits</li>
         <li>Tailored Resume with different Styles</li>
         <li>Generate Cover Letter</li>
-        <li>Advanced AI Refinements</li>
+        <li><span class="highlight">Refine with AI (add/change/translate/grammar)</span></li>
         <li>ATS Optimization</li>
         <li>One-time purchase</li>
       </ul>
@@ -116,11 +143,10 @@
       </div>
 
       <ul class="features">
-        <li><strong>250</strong> Credits</li>
-        <li><span class="highlight">+150 Bonus Credits</span></li>
+        <li><strong>250</strong> Credits ( +150 Bonus Included)</li>
         <li>Tailored Resume with different Styles</li>
         <li>Generate Cover Letter</li>
-        <li>Advanced AI Refinements</li>
+        <li><span class="highlight">Refine with AI (add/change/translate/grammar)</span></li>
         <li>ATS Optimization</li>
         <li>One-time purchase</li>
       </ul>
@@ -140,11 +166,10 @@
       </div>
 
       <ul class="features">
-        <li><strong>500</strong> Credits</li>
-        <li><span class="highlight">+300 Bonus Credits</span></li>
+        <li><strong>600</strong> Credits ( +400 Bonus Included)</li>
         <li>Tailored Resume with different Styles</li>
         <li>Generate Cover Letter</li>
-        <li>Advanced AI Refinements</li>
+        <li><span class="highlight">Refine with AI (add/change/translate/grammar)</span></li>
         <li>ATS Optimization</li>
         <li>One-time purchase</li>
       </ul>

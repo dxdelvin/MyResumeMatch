@@ -244,7 +244,7 @@ function logout() {
   localStorage.removeItem("draft_jobDescription");
   localStorage.removeItem("draft_styleSelect");
   localStorage.removeItem("draft_color");
-
+  localStorage.removeItem("target_role");
   // Clear UI preferences
   localStorage.removeItem("hide_desktop_nudge");
 

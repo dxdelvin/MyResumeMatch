@@ -94,8 +94,8 @@
 
       <div class="pane-header" style="display: flex; justify-content: space-between; align-items: center;">
         <div>
-          <h2>Builder Studio</h2>
-          <p class="modal-subtitle">AI-Powered Resume Architect</p>
+          <h2 id="builder-title">Builder Studio</h2>
+          <p id="builder-subtitle" class="modal-subtitle">AI-Powered Resume Architect</p>
         </div>
 
         <div style="display: flex; gap: 8px;     flex-direction: column; margin-left: 10px;">
@@ -345,18 +345,47 @@
 
 
   <script>
-    // Visual Logic for Gauge
-    function updateGauge(score) {
-      const deg = (score / 100) * 360;
-      document.querySelector('.score-circle').style.setProperty('--score-deg', `${deg}deg`);
-      document.getElementById('atsScore').innerText = score;
-    }
-  </script>
+    window.addEventListener('DOMContentLoaded', () => {
+    let role = localStorage.getItem("target_role");
 
-  <div id="loadingOverlay" class="loading-overlay">
-    <div class="spinner"></div>
-    <p>Generating your resume...</p>
-  </div>
+    if (role) {
+      // 1. Clean up the text
+      const cleanRole = role.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+      
+      // 2. Update the UI to match their intent
+      const subEl = document.getElementById('builder-subtitle');
+      const descEl = document.getElementById('jobDescription');
+
+      if(subEl) subEl.innerText = `Optimizing for ${cleanRole}`;
+      if(descEl) descEl.placeholder = `Paste the ${cleanRole} job description here...`;
+
+      // 3. CAPITALIST MOVE: Auto-Select "Tech" style for engineers, "Harvard" for finance
+      // This makes the tool feel "intelligent"
+      const styleSelect = document.getElementById('styleSelect');
+      if (styleSelect && role) {
+          const r = role.toLowerCase();
+
+          // A. CREATIVE: Designers, Marketers, Writers (Needs the "Creative" 2-column look)
+          if (['design', 'ui', 'ux', 'creative', 'writer', 'marketing', 'art', 'graphic', 'fashion'].some(k => r.includes(k))) {
+              styleSelect.value = "Creative";
+          } 
+          // B. TECH: Developers, Engineers, Data, Product (Needs the "Tech" modern look)
+          // Note: 'product' captures 'product-manager' which is often Tech style
+          else if (['software', 'developer', 'engineer', 'data', 'stack', 'devops', 'qa', 'product', 'tech', 'web', 'cyber', 'it', 'daily-equity'].some(k => r.includes(k))) {
+              styleSelect.value = "Tech";
+          } 
+          // C. PROFESSIONAL / STANDARD: Healthcare, Business, Admin, Trades (Needs "Harvard" safety)
+          // This covers: Nurse, Admin, Teacher, Accountant, Driver, Electrician, etc.
+          else {
+              styleSelect.value = "Harvard";
+          }
+      }
+
+      // 4. Clear memory so it doesn't get stuck on "Nurse" forever
+      localStorage.removeItem("target_role");
+    }
+  });
+</script>
 
   <script src="/static/js/app.js"></script>
   <script defer src="/static/js/common.js"></script>
