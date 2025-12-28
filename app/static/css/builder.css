@@ -42,7 +42,7 @@ body {
   display: flex;
   height: calc(100vh - var(--nav-height));
   width: 100%;
-  overflow: hidden;
+  flex-direction: column;
 }
 
 /* --- 3. Left Pane: Command Center --- */
@@ -614,7 +614,7 @@ body.style-creative .word-btn {
     padding: 0 20px;
 
     flex-direction: column;
-    gap: 15px;
+    gap: 7px;
     left: auto;
     top: auto;
   }
@@ -622,6 +622,7 @@ body.style-creative .word-btn {
   .hud-group {
     width: 100%;
     justify-content: center;
+    margin: 10px 0;
   }
 
   /* Make tabs look like a sub-nav */
@@ -655,6 +656,7 @@ body.style-creative .word-btn {
     margin: 0 auto 20px auto;
     padding: 20px;
     font-size: 14px;
+    margin-bottom: 90px;
   }
 
   /* --- REFINE BAR --- */

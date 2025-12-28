@@ -30,7 +30,9 @@ async function loadUserProfile() {
       window.location.href = "/";
     }
     const creditEl = document.getElementById("creditCount");
-    if (creditEl) creditEl.innerText = "Guest Mode (0)"; // Show "Guest" instead of credits
+    const generateBtn = document.getElementById("generateBtn");
+    if (creditEl) creditEl.innerText = "Guest (0)"; // Show "Guest" instead of credits
+    if (generateBtn) generateBtn.innerHTML = "<span class='material-icons-round'>auto_awesome</span>"
     updateNavbarUI(null);
   }
 
