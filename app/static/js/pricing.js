@@ -1,6 +1,6 @@
 const PRICING = {
   inr: { symbol: "₹", basic: "129", popular: "249", pro: "499" },
-  eur: { symbol: "€", basic: "3.99", popular: "4.99", pro: "9.99" }
+  eur: { symbol: "€", basic: "1.29", popular: "2.49", pro: "4.99" }
 };
 
 

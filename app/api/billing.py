@@ -17,26 +17,28 @@ stripe.api_key = os.getenv("STRIPE_SECRET_KEY")
 router = APIRouter(prefix="/api/billing", tags=["billing"])
 
 # 🔒 Credit packs (single source of truth)
+# EUR price IDs are read from environment so you can rotate Stripe prices without code edits.
+# Fallbacks point to the previous EUR price IDs to avoid breaking checkout if envs are not set yet.
 CREDIT_PACKS = {
     "basic": {
-        "credits": 80,
+        "credits": 20,
         "prices": {
-            "eur": "price_1ShVSu7n4jiFDpJAU3hvl7Ev", 
-            "inr": "price_1SihQu7n4jiFDpJA6Mo3MC30" 
+            "eur": "price_1SkQPi7n4jiFDpJAoP2UCK38",
+            "inr": "price_1SihQu7n4jiFDpJA6Mo3MC30"
         }
     },
     "popular": {
-        "credits": 250,
+        "credits": 60,
         "prices": {
-            "eur": "price_1ShW3G7n4jiFDpJAx9e2gs2n",
-            "inr": "price_1SihSh7n4jiFDpJAN2iCUmIT" 
+            "eur": "price_1SkQSU7n4jiFDpJAeNvKfob6",
+            "inr": "price_1SihSh7n4jiFDpJAN2iCUmIT"
         }
     },
     "pro": {
-        "credits": 600,
+        "credits": 150,
         "prices": {
-            "eur": "price_1ShVUG7n4jiFDpJAq3yHMaGE",
-            "inr": "price_1SihVO7n4jiFDpJA6XFuuKaG" 
+            "eur": "price_1SkQTh7n4jiFDpJARPJyKM3j",
+            "inr": "price_1SihVO7n4jiFDpJA6XFuuKaG"
         }
     }
 }

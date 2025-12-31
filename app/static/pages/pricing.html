@@ -116,19 +116,18 @@
       <div class="card-header">
         <h3>Basic</h3>
         <div class="price">
-          <span class="original-price" id="original-basic">€5.99</span>
-          <span class="amount" id="price-basic">€3.99</span>
+          <span class="original-price" id="original-basic">€1.99</span>
+          <span class="amount" id="price-basic">€1.29</span>
         </div>
-        <div class="discount-badge">Limited Offer</div>
       </div>
 
       <ul class="features">
-        <li><strong>80</strong> Credits</li>
-        <li>Tailored Resume with different Styles</li>
-        <li>Generate Cover Letter</li>
+        <li><strong>20</strong> Credits</li>
+        <li><span class="highlight">👉 Apply to a few carefully chosen jobs</span></li>
+        <li><strong>Best for:</strong> trial / light usage plan</li>
+        <li>AI‑tailored resumes + cover letters</li>
         <li><span class="highlight">Refine with AI (add/change/translate/grammar)</span></li>
         <li>ATS Optimization</li>
-        <li>One-time purchase</li>
       </ul>
 
       <button class="btn-primary" onclick="selectPlan('basic')">
@@ -138,24 +137,23 @@
 
     <!-- POPULAR -->
     <div class="pricing-card popular">
-      <div class="popular-badge">Best Value</div>
-
       <div class="card-header">
         <h3>Popular</h3>
         <div class="price">
-          <span class="original-price" id="original-popular">€7.49</span>
-          <span class="amount" id="price-popular">€4.99</span>
+          <span class="original-price" id="original-popular">€3.49</span>
+          <span class="amount" id="price-popular">€2.49</span>
         </div>
-        <div class="discount-badge">Limited Offer</div>
+        <div class="popular-badge">Most Popular</div>
       </div>
 
       <ul class="features">
-        <li><strong>250</strong> Credits ( +150 Bonus Included)</li>
-        <li>Tailored Resume with different Styles</li>
-        <li>Generate Cover Letter</li>
+        <li><strong>60</strong> Credits</li>
+        <li><span class="highlight">👉 Cover your entire job application phase</span></li>
+        <li><strong>Best for:</strong> Active job search across multiple roles</li>
+        <li>⭐ Most users choose this and never need to upgrade</li>
+        <li>AI‑tailored resumes + cover letters</li>
         <li><span class="highlight">Refine with AI (add/change/translate/grammar)</span></li>
         <li>ATS Optimization</li>
-        <li>One-time purchase</li>
       </ul>
 
       <button class="btn-primary popular-btn" onclick="selectPlan('popular')">
@@ -168,19 +166,18 @@
       <div class="card-header">
         <h3>Pro</h3>
         <div class="price">
-          <span class="original-price" id="original-pro">€14.99</span>
-          <span class="amount" id="price-pro">€9.99</span>
+          <span class="original-price" id="original-pro">€7.99</span>
+          <span class="amount" id="price-pro">€4.99</span>
         </div>
-        <div class="discount-badge">Limited Offer</div>
       </div>
 
       <ul class="features">
-        <li><strong>600</strong> Credits ( +400 Bonus Included)</li>
-        <li>Tailored Resume with different Styles</li>
-        <li>Generate Cover Letter</li>
+        <li><strong>150</strong> Credits</li>
+        <li><span class="highlight">👉 Built for aggressive job searches</span></li>
+        <li><strong>Best for:</strong> Intensive job hunt, multiple versions, frequent refinements</li>
+        <li>AI‑tailored resumes + cover letters</li>
         <li><span class="highlight">Refine with AI (add/change/translate/grammar)</span></li>
         <li>ATS Optimization</li>
-        <li>One-time purchase</li>
       </ul>
 
       <button class="btn-primary" onclick="selectPlan('pro')">
@@ -189,6 +186,41 @@
     </div>
 
   </div>
+
+  <!-- Data Privacy Section -->
+  <section class="privacy-section" style="max-width: 600px; margin: 40px auto; padding: 20px;">
+    <div class="privacy-expandable" style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border: 1px solid #e2e8f0; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);">
+      <button class="privacy-toggle" onclick="togglePrivacy(this)" style="width: 100%; padding: 20px 24px; background: none; border: none; text-align: left; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-size: 15px; font-weight: 600; color: #1e293b; transition: all 0.2s ease;">
+        <span style="display: flex; align-items: center; gap: 8px;">
+          <span style="font-size: 18px;">🔒</span>
+          Your data, clearly explained
+        </span>
+        <span class="privacy-arrow" style="transition: transform 0.3s ease; color: #64748b; font-size: 14px;">▼</span>
+      </button>
+      <div class="privacy-content" style="max-height: 0; overflow: hidden; transition: max-height 0.4s ease; background: rgba(255, 255, 255, 0.5);">
+        <div style="padding: 0 24px 24px;">
+          <ul style="list-style: none; padding: 0; margin: 0; font-size: 14px; line-height: 1.7; color: #475569;">
+            <li style="margin-bottom: 12px; display: flex; align-items: flex-start; gap: 8px;">
+              <span style="color: #10b981; font-weight: bold; margin-top: 2px;">✓</span>
+              <span><strong style="color: #1e293b;">We read your resume only to generate results</strong> - No other processing, no analysis, just to help you.</span>
+            </li>
+            <li style="margin-bottom: 12px; display: flex; align-items: flex-start; gap: 8px;">
+              <span style="color: #10b981; font-weight: bold; margin-top: 2px;">✓</span>
+              <span><strong style="color: #1e293b;">Your files are not shared or sold</strong> - Ever. Your data stays with you. and stored in local storage of your browser.</span>
+            </li>
+            <li style="margin-bottom: 12px; display: flex; align-items: flex-start; gap: 8px;">
+              <span style="color: #10b981; font-weight: bold; margin-top: 2px;">✓</span>
+              <span><strong style="color: #1e293b;">You can delete your data anytime</strong> - Full control, no questions asked. but can lose access to your credits</span>
+            </li>
+            <li style="display: flex; align-items: flex-start; gap: 8px;">
+              <span style="color: #10b981; font-weight: bold; margin-top: 2px;">✓</span>
+              <span><strong style="color: #1e293b;">No auto-applying, no background usage</strong> - We only work when you ask us to.</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <!-- FAQ -->
   <section class="faq-section">
@@ -221,12 +253,32 @@
 
 <script src="/static/js/pricing.js"></script>
 <script>
+  // Privacy expandable functionality
+  function togglePrivacy(button) {
+    const content = button.nextElementSibling;
+    const arrow = button.querySelector('.privacy-arrow');
+    
+    if (content.style.maxHeight && content.style.maxHeight !== '0px') {
+      // Close
+      content.style.maxHeight = '0px';
+      arrow.style.transform = 'rotate(0deg)';
+      button.style.background = 'none';
+    } else {
+      // Open
+      content.style.maxHeight = content.scrollHeight + 'px';
+      arrow.style.transform = 'rotate(180deg)';
+      button.style.background = 'rgba(59, 130, 246, 0.05)';
+    }
+  }
+</script>
+<script>
   (function(){
     function niceOriginals(currency){
       if(currency==='inr'){
         return { basic: 199, popular: 399, pro: 799, symbol: '₹' };
       }
-      return { basic: 5.99, popular: 7.49, pro: 14.99, symbol: '€' };
+      // EUR anchors (strike-through) for discounts
+      return { basic: 1.99, popular: 3.49, pro: 7.99, symbol: '€' };
     }
     function format(val, isINR){ return isINR ? String(Math.round(val)) : Number(val).toFixed(2); }
     function update(){
