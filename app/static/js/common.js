@@ -261,3 +261,65 @@ window.addEventListener('storage', function(event) {
     window.location.href = '/'; 
   }
 });
+
+
+
+// Add this to app/static/js/auth.js
+
+function isTokenExpired(token) {
+    if (!token) return true;
+    try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        const currentTime = Math.floor(Date.now() / 1000);
+        // buffer of 10 seconds
+        return payload.exp < (currentTime + 10); 
+    } catch (e) {
+        return true; // If we can't read it, it's bad.
+    }
+}
+
+function checkSession() {
+    const token = localStorage.getItem("google_token"); // Or whatever key you use
+    
+    if (token && isTokenExpired(token)) {
+        console.warn("Session expired. Logging out...");
+        handleLogout(); // Call your existing logout function
+    }
+}
+
+// Run this immediately on page load
+document.addEventListener("DOMContentLoaded", () => {
+    checkSession();
+});
+
+// In app/static/js/common.js
+
+async function authorizedFetch(url, options = {}) {
+    const token = localStorage.getItem("google_token");
+    
+    const headers = {
+        'Content-Type': 'application/json',
+        ...options.headers
+    };
+
+    if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+    }
+
+    const response = await fetch(url, {
+        ...options,
+        headers
+    });
+
+    // 🚨 THE FIX: Catch 401 (Unauthorized) errors globally
+    if (response.status === 401 || response.status === 403) {
+        console.error("Token invalid or expired. Forcing logout.");
+        localStorage.removeItem("google_token");
+        // Optional: Show a nice alert before reloading
+        alert("Your session has expired. Please sign in again.");
+        window.location.href = "/"; 
+        return null;
+    }
+
+    return response;
+}

@@ -36,11 +36,7 @@ async function loadProfile() {
 
   try {
     // 🔒 SECURE: Use JWT token, not email parameter
-    const res = await fetch("/api/profile", {
-      headers: {
-        "Authorization": `Bearer ${user.token}`
-      }
-    });
+    const res = await authorizedFetch("/api/profile", true);
 
     if (!res.ok) {
       throw new Error("Failed to load profile");
