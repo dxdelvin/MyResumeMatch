@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>{{ title }}</title>
+  <title>Resume Match Career Blog</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 
@@ -118,6 +118,7 @@
     let currentCategory = 'all';
     let allPosts = [];
     let categories = [];
+    const extraCategories = ["Career Jobs"]; // Always show after All
 
     // Check authentication and show/hide create blog link
     document.addEventListener('DOMContentLoaded', function() {
@@ -273,8 +274,12 @@
     function renderCategoryFilter() {
       const container = document.getElementById('category-filter');
       let html = '<button class="category-btn active" data-category="all">All</button>';
-      
-      categories.forEach(category => {
+
+      const merged = [...extraCategories, ...categories];
+      const seen = new Set();
+      merged.forEach(category => {
+        if (!category || seen.has(category)) return;
+        seen.add(category);
         html += `<button class="category-btn" data-category="${category}">${category}</button>`;
       });
 

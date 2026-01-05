@@ -542,7 +542,7 @@ def login_page(request: Request, db: Session = Depends(get_db)):
     user_count = get_user_count(db)
     return templates.TemplateResponse("index.html", {
         "request": request,
-        "title": "Free AI Resume Builder from Job Descriptions | ResumeAI",
+        "title": "Resume Match | AI Resume Builder from Job Descriptions",
         "description": "Generate ATS-friendly resumes and cover letters for Any Job Description",
         "h1_text": "Generate AI Resumes & Cover Letters ",
         "hero_subtext": "Don't just update your old CV optimize it. Match it with Job Description with AI.",
@@ -565,7 +565,7 @@ def pricing_page():
 def blog_page(request: Request):
     return templates.TemplateResponse("blog/index.html", {
         "request": request,
-        "title": "Career Blog | ResumeAI",
+        "title": "Resume Match Career Blog | Job Search & Resume Tips",
         "description": "Expert tips, insights, and strategies to accelerate your job search and career growth"
     })
 
@@ -573,7 +573,7 @@ def blog_page(request: Request):
 def blog_post_page(request: Request, slug: str):
     return templates.TemplateResponse("blog/post.html", {
         "request": request,
-        "title": "Blog Post | ResumeAI",
+        "title": "Resume Match Blog | Career Insights",
         "description": "Read our latest career insights and job search tips",
         "slug": slug
     })
@@ -586,8 +586,8 @@ def create_blog_page(request: Request, email: str = Depends(get_verified_email))
     
     return templates.TemplateResponse("blog/create.html", {
         "request": request,
-        "title": "Create Blog Post | ResumeAI Admin",
-        "description": "Create and publish blog posts for ResumeAI"
+        "title": "Resume Match | Create Blog Post",
+        "description": "Create and publish blog posts for Resume Match"
     })
 
 @app.get("/result/{resume_id}")
