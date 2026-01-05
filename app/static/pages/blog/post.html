@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{ title }}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <meta name="description" content="{{ description }}" />
+  <meta name="keywords"
+    content="AI resume builder, career advice, job search tips, resume writing, cover letter tips, ATS optimization, AI career tool" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://myresumematch.com/blog/{{ slug }}/" />
+
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://myresumematch.com/blog/{{ slug }}/" />
+  <meta property="og:title" content="{{ title }}" />
+  <meta property="og:description" content="{{ description }}" />
+  <meta property="og:image" content="{{ featured_image or 'https://myresumematch.com/static/img/og-image.jpg' }}" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="{{ featured_image or 'https://myresumematch.com/static/img/og-image.jpg' }}" />
+  <meta name="twitter:title" content="{{ title }}" />
+  <meta name="twitter:description" content="{{ description }}" />
+
+  <link rel="stylesheet" href="/static/css/login.css" />
+  <link rel="stylesheet" href="/static/css/navbar.css" />
+  <link rel="stylesheet" href="/static/css/blog.css" />
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%230a66c2%22/><text x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22central%22 text-anchor=%22middle%22 font-family=%22sans-serif%22 font-weight=%22900%22 font-size=%2250%22 fill=%22white%22>AI</text></svg>">
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/jwt-decode@3.1.2/build/jwt-decode.min.js"></script>
+</head>
+
+<body>
+  <nav class="navbar">
+    <div class="container nav-container">
+
+      <a href="/" class="logo-container" aria-label="ResumeAI Home">
+        <span class="logo-text">Resume</span>
+        <span class="logo-badge">AI</span>
+      </a>
+
+      <button class="hamburger" aria-label="Toggle navigation">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <div class="nav-links">
+        <a href="/builder">Builder</a>
+        <a href="/blog">Blog</a>
+        <a href="/admin/create-blog" id="create-blog-link" style="display: none;">Create Blog</a>
+        <a href="/pricing">Pricing</a>
+
+        <div id="nav-auth-section">
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="blog-post-container" id="blog-post-content">
+    <div class="loading-spinner">Loading article...</div>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3>ResumeAI</h3>
+          <p>AI-powered resume and cover letter generation from job descriptions.</p>
+        </div>
+        <div class="footer-section">
+          <h4>Product</h4>
+          <ul>
+            <li><a href="/builder">Resume Builder</a></li>
+            <li><a href="/blog">Career Blog</a></li>
+            <li><a href="/pricing">Pricing</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h4>Resources</h4>
+          <ul>
+            <li><a href="/privacy-policy">Privacy Policy</a></li>
+            <li><a href="/extra/contact">Contact</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 ResumeAI. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/static/js/common.js"></script>
+  <script src="/static/js/auth.js"></script>
+  <script src="/static/js/blog.js"></script>
+</body>
+
+</html>

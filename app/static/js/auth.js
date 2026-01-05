@@ -1,8 +1,32 @@
 // app/static/js/auth.js
 
 document.addEventListener("DOMContentLoaded", function() {
+    // Initialize Google Sign-In
+    initializeGoogleSignIn();
     updateAuthUI();
 });
+
+// Initialize Google Sign-In with callback
+function initializeGoogleSignIn() {
+    // Wait for Google API to load
+    const checkGoogleLoaded = setInterval(() => {
+        if (window.google && window.google.accounts && window.google.accounts.id) {
+            clearInterval(checkGoogleLoaded);
+            
+            window.google.accounts.id.initialize({
+                client_id: "109724056179-v1ggq3b91h7jmfa9ivi1etjvq5q5q9ui.apps.googleusercontent.com",
+                callback: handleGoogleLogin,
+                auto_select: false
+            });
+            
+            // Re-render buttons if already on page
+            updateAuthUI();
+        }
+    }, 100);
+    
+    // Stop checking after 10 seconds
+    setTimeout(() => clearInterval(checkGoogleLoaded), 10000);
+}
 
 // --- 1. MULTI-TAB SYNC (The "Smart" Logout) ---
 window.addEventListener('storage', function(event) {
@@ -48,7 +72,29 @@ function updateAuthUI() {
         if (heroWelcomeArea) heroWelcomeArea.style.display = 'block';
 
     } else {
+        // --- NOT LOGGED IN STATE ---
         
+        // A. Update Navbar - Show Google Sign-In button
+        if (navAuthSection) {
+            navAuthSection.innerHTML = '<div id="google-signin-button"></div>';
+            
+            // Render Google Sign-In button
+            if (window.google && window.google.accounts && window.google.accounts.id) {
+                window.google.accounts.id.renderButton(
+                    document.getElementById('google-signin-button'),
+                    {
+                        type: 'standard',
+                        size: 'medium',
+                        theme: 'filled_blue',
+                        text: 'signin',
+                        shape: 'rectangular',
+                        logo_alignment: 'left'
+                    }
+                );
+            }
+        }
+        
+        // B. Update Hero Section
         if (heroLoginArea) heroLoginArea.style.display = 'block';
         if (heroWelcomeArea) heroWelcomeArea.style.display = 'none';
     }

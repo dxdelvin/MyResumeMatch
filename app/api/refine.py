@@ -113,13 +113,13 @@ def refine_resume(data: RefineRequest, email: str = Depends(get_verified_email),
 
     try:
         response = client.chat.completions.create(
-            model="gpt-4o-mini",
+            model="gpt-5.1",
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": prompt}
             ],
             temperature=0.2,
-            max_tokens=5000,
+            max_completion_tokens=5000,
         )
         content = response.choices[0].message.content.strip()
         content = content.replace('```html', '').replace('```', '').strip()

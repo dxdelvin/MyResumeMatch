@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{ title }}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <meta name="description" content="{{ description }}" />
+  <meta name="keywords"
+    content="AI resume builder, career advice, job search tips, resume writing, cover letter tips, ATS optimization, AI career tool" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://myresumematch.com/blog/" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://myresumematch.com/blog/" />
+  <meta property="og:title" content="{{ title }}" />
+  <meta property="og:description" content="{{ description }}" />
+  <meta property="og:image" content="https://myresumematch.com/static/img/og-image.jpg" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://myresumematch.com/static/img/og-image.jpg" />
+  <meta name="twitter:title" content="{{ title }}" />
+  <meta name="twitter:description" content="{{ description }}" />
+
+  <link rel="stylesheet" href="/static/css/login.css" />
+  <link rel="stylesheet" href="/static/css/navbar.css" />
+  <link rel="stylesheet" href="/static/css/blog.css" />
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%230a66c2%22/><text x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22central%22 text-anchor=%22middle%22 font-family=%22sans-serif%22 font-weight=%22900%22 font-size=%2250%22 fill=%22white%22>AI</text></svg>">
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/jwt-decode@3.1.2/build/jwt-decode.min.js"></script>
+</head>
+
+<body>
+  <nav class="navbar">
+    <div class="container nav-container">
+
+      <a href="/" class="logo-container" aria-label="ResumeAI Home">
+        <span class="logo-text">Resume</span>
+        <span class="logo-badge">AI</span>
+      </a>
+
+      <button class="hamburger" aria-label="Toggle navigation">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <div class="nav-links">
+        <a href="/builder">Builder</a>
+        <a href="/blog">Blog</a>
+        <a href="/admin/create-blog" id="create-blog-link" style="display: none;">Create Blog</a>
+        <a href="/pricing">Pricing</a>
+
+        <div id="nav-auth-section">
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="blog-container">
+    <div class="blog-header">
+      <h1>Career Blog</h1>
+      <p>Expert tips, insights, and strategies to accelerate your job search and career growth</p>
+    </div>
+
+    <div class="featured-section">
+      <h2 style="text-align: center; margin-bottom: 30px; color: #1a1a1a;">Featured Articles</h2>
+      <div class="featured-grid" id="featured-content">
+        <div class="loading-spinner">Loading featured articles...</div>
+      </div>
+    </div>
+
+    <div class="category-filter" id="category-filter">
+      <button class="category-btn active" data-category="all">All</button>
+    </div>
+
+    <div class="blog-grid" id="blog-content">
+      <div class="loading-spinner">Loading articles...</div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3>ResumeAI</h3>
+          <p>AI-powered resume and cover letter generation from job descriptions.</p>
+        </div>
+        <div class="footer-section">
+          <h4>Product</h4>
+          <ul>
+            <li><a href="/builder">Resume Builder</a></li>
+            <li><a href="/blog">Career Blog</a></li>
+            <li><a href="/pricing">Pricing</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h4>Resources</h4>
+          <ul>
+            <li><a href="/privacy-policy">Privacy Policy</a></li>
+            <li><a href="/extra/contact">Contact</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 ResumeAI. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/static/js/common.js"></script>
+  <script src="/static/js/auth.js"></script>
+  <script>
+    let currentCategory = 'all';
+    let allPosts = [];
+    let categories = [];
+
+    // Check authentication and show/hide create blog link
+    document.addEventListener('DOMContentLoaded', function() {
+      // Call updateAuthUI from auth.js to handle navbar
+      if (typeof updateAuthUI === 'function') {
+        updateAuthUI();
+      }
+      checkAuthenticationAndShowCreateBlogLink();
+      loadFeaturedPosts();
+      loadCategories();
+      loadBlogPosts();
+    });
+
+    function checkAuthenticationAndShowCreateBlogLink() {
+      const savedUser = localStorage.getItem('user');
+      const createBlogLink = document.getElementById('create-blog-link');
+      
+      if (!savedUser || savedUser === 'null' || savedUser === 'undefined') {
+        if (createBlogLink) createBlogLink.style.display = 'none';
+        return;
+      }
+
+      try {
+        const user = JSON.parse(savedUser);
+        const email = user.email;
+        
+        if (email === 'dxdelvin@gmail.com') {
+          createBlogLink.style.display = 'inline-block';
+        } else {
+          createBlogLink.style.display = 'none';
+        }
+      } catch (error) {
+        console.error('Error parsing user data:', error);
+        if (createBlogLink) createBlogLink.style.display = 'none';
+      }
+    }
+
+    async function loadBlogPosts() {
+      try {
+        const response = await fetch('/api/blog/posts?published_only=true&limit=20');
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const posts = await response.json();
+        allPosts = posts;
+        renderBlogPosts(posts);
+      } catch (error) {
+        console.error('Error loading blog posts:', error);
+        document.getElementById('blog-content').innerHTML = '<p>Error loading articles. Please try again later.</p>';
+      }
+    }
+
+    async function loadFeaturedPosts() {
+      try {
+        const response = await fetch('/api/blog/featured?limit=3');
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const posts = await response.json();
+        renderFeaturedPosts(posts);
+      } catch (error) {
+        console.error('Error loading featured posts:', error);
+        document.getElementById('featured-content').innerHTML = '<p>Error loading featured articles.</p>';
+      }
+    }
+
+    async function loadCategories() {
+      try {
+        const response = await fetch('/api/blog/categories');
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        categories = data.categories;
+        renderCategoryFilter();
+      } catch (error) {
+        console.error('Error loading categories:', error);
+      }
+    }
+
+    function renderFeaturedPosts(posts) {
+      const container = document.getElementById('featured-content');
+      
+      if (posts.length === 0) {
+        container.innerHTML = '<p>No featured articles available.</p>';
+        return;
+      }
+
+      const mainPost = posts[0];
+      const sidePosts = posts.slice(1);
+
+      let html = `
+        <div class="featured-main" onclick="navigateToPost('${mainPost.slug}')">
+          <div class="featured-main-image" style="${mainPost.featured_image ? `background-image: url(${mainPost.featured_image}); background-size: cover; background-position: center;` : ''}"></div>
+          <div class="featured-main-content">
+            ${mainPost.category ? `<span class="blog-card-category">${mainPost.category}</span>` : ''}
+            <h3 class="blog-card-title">${mainPost.title}</h3>
+            <p class="blog-card-excerpt">${mainPost.excerpt || mainPost.content.substring(0, 150) + '...'}</p>
+            <div class="blog-card-meta">
+              <span class="blog-card-author">${mainPost.author_name}</span>
+              <span>${formatDate(mainPost.created_at)} • ${mainPost.read_time_minutes} min read</span>
+            </div>
+          </div>
+        </div>
+        <div class="featured-side">
+      `;
+
+      sidePosts.forEach(post => {
+        html += `
+          <div class="featured-card" onclick="navigateToPost('${post.slug}')">
+            <h4 style="margin: 0 0 10px 0; color: #1a1a1a; font-size: 1.1rem;">${post.title}</h4>
+            <p style="margin: 0 0 10px 0; color: #666; font-size: 0.9rem;">${post.excerpt || post.content.substring(0, 100) + '...'}</p>
+            <div style="font-size: 0.8rem; color: #999;">
+              ${formatDate(post.created_at)} • ${post.read_time_minutes} min read
+            </div>
+          </div>
+        `;
+      });
+
+      html += '</div>';
+      container.innerHTML = html;
+    }
+
+    function renderBlogPosts(posts) {
+      const container = document.getElementById('blog-content');
+      
+      if (posts.length === 0) {
+        container.innerHTML = '<p>No articles found in this category.</p>';
+        return;
+      }
+
+      let html = '';
+      posts.forEach(post => {
+        html += `
+          <div class="blog-card" onclick="navigateToPost('${post.slug}')">
+            <div class="blog-card-image" style="${post.featured_image ? `background-image: url(${post.featured_image}); background-size: cover; background-position: center;` : ''}"></div>
+            <div class="blog-card-content">
+              ${post.category ? `<span class="blog-card-category">${post.category}</span>` : ''}
+              <h3 class="blog-card-title">${post.title}</h3>
+              <p class="blog-card-excerpt">${post.excerpt || post.content.substring(0, 150) + '...'}</p>
+              <div class="blog-card-meta">
+                <span class="blog-card-author">${post.author_name}</span>
+                <span>${formatDate(post.created_at)} • ${post.read_time_minutes} min read</span>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+    }
+
+    function renderCategoryFilter() {
+      const container = document.getElementById('category-filter');
+      let html = '<button class="category-btn active" data-category="all">All</button>';
+      
+      categories.forEach(category => {
+        html += `<button class="category-btn" data-category="${category}">${category}</button>`;
+      });
+
+      container.innerHTML = html;
+
+      container.addEventListener('click', (e) => {
+        if (e.target.classList.contains('category-btn')) {
+          document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
+          e.target.classList.add('active');
+          
+          const selectedCategory = e.target.dataset.category;
+          filterPosts(selectedCategory);
+        }
+      });
+    }
+
+    function filterPosts(category) {
+      currentCategory = category;
+      
+      if (category === 'all') {
+        renderBlogPosts(allPosts);
+      } else {
+        const filtered = allPosts.filter(post => post.category === category);
+        renderBlogPosts(filtered);
+      }
+    }
+
+    function navigateToPost(slug) {
+      window.location.href = `/blog/${slug}`;
+    }
+
+    function formatDate(dateString) {
+      const date = new Date(dateString);
+      return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+    }
+  </script>
+</body>
+
+</html>
