@@ -3,6 +3,7 @@ from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from openai import OpenAI
 import os
+from datetime import datetime
 
 from app.database import get_db
 from app.dependencies import get_verified_email
@@ -41,6 +42,8 @@ def generate_cl(data: CoverLetterInput, email: str = Depends(get_verified_email)
     Generate a narrative-focused cover letter.
     🔒 SECURITY: Email comes from verified JWT token.
     """
+    
+    today_date = datetime.now().strftime("%B %d, %Y")
     
     # ✅ VALIDATION 1: Character Limits
     if len(data.motivation or "") > CHAR_LIMIT_COVER_LETTER_EXTRA:
@@ -118,6 +121,9 @@ def generate_cl(data: CoverLetterInput, email: str = Depends(get_verified_email)
     
     CANDIDATE PROFILE INFO:
     {profile_info}
+    
+    TODAY'S DATE:
+    {today_date}
     
     ---
     USER INPUTS (USE THESE TO DRIVE THE NARRATIVE):

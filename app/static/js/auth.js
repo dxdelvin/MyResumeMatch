@@ -147,7 +147,17 @@ async function handleGoogleLogin(response) {
             const profile = await res.json();
             
             if (profile && profile.email) {
-                setTimeout(() => window.location.href = "/builder", 500);
+                // Check if user is on a blog-related page
+                const currentPath = window.location.pathname;
+                const isBlogPage = currentPath.startsWith('/blog');
+                
+                // If on blog page, stay there; otherwise go to builder
+                if (!isBlogPage) {
+                    setTimeout(() => window.location.href = "/builder", 500);
+                } else {
+                    // Stay on current page, just update UI
+                    updateAuthUI();
+                }
             } else {
                 setTimeout(() => window.location.href = "/profile", 500);
             }
