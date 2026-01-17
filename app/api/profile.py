@@ -6,6 +6,7 @@ from app.database import get_db, SessionLocal
 from app.models.profile import Profile
 from app.dependencies import get_verified_email
 from app.models.payment import Payment
+from app.services.credits import validate_and_apply_promocode
 
 router = APIRouter()
 
@@ -16,6 +17,7 @@ class ProfileRequest(BaseModel):
     location: str | None = None
     linkedin: str | None = None
     portfolio: str | None = None
+    promocode: str | None = None  # Optional promocode during profile creation
 
 
 @router.get("/profile")
@@ -47,7 +49,9 @@ def get_profile(email: str = Depends(get_verified_email), db: Session = Depends(
         "linkedin": profile.linkedin,
         "portfolio": profile.portfolio,
         "credits": profile.credits,
-        "history": payment_history  # <--- NEW FIELD
+        "history": payment_history,
+        "promocode_redeemed": profile.promocode_redeemed or False,
+        "promocode_used": profile.promocode_used  # Which code was applied
     }
 
 
@@ -55,8 +59,11 @@ def get_profile(email: str = Depends(get_verified_email), db: Session = Depends(
 def save_profile(data: ProfileRequest, email: str = Depends(get_verified_email), db: Session = Depends(get_db)):
     """
     Save/update user profile. Email is extracted from verified Google token.
+    If promocode is provided during profile creation, validate and apply it.
     """
     profile = db.query(Profile).filter(Profile.email == email).first()
+    
+    promocode_result = None
 
     if profile:
         # update existing
@@ -77,14 +84,37 @@ def save_profile(data: ProfileRequest, email: str = Depends(get_verified_email),
             credits=5  # 🔑 FREE CREDITS ON SIGNUP
         )
         db.add(profile)
+        db.flush()  # Flush to ensure profile is in DB before promocode validation
+        
+        # 🎉 Handle promocode on NEW profile creation
+        if data.promocode and data.promocode.strip():
+            try:
+                promocode_result = validate_and_apply_promocode(db, email, data.promocode)
+            except HTTPException as e:
+                # Promocode validation failed, but profile was created with base credits
+                # Return the error in response
+                db.commit()
+                db.refresh(profile)
+                return {
+                    "message": "Profile created but promocode could not be applied",
+                    "credits": profile.credits,
+                    "error": e.detail
+                }
 
     db.commit()
     db.refresh(profile)
 
-    return {
+    response = {
         "message": "Profile saved successfully",
         "credits": profile.credits
     }
+    
+    # Include promocode result if available
+    if promocode_result:
+        response["promocode_message"] = promocode_result["message"]
+        response["credits_awarded"] = promocode_result["credits_awarded"]
+    
+    return response
 
 
 @router.delete("/profile")
@@ -121,3 +151,16 @@ def delete_profile(email: str = Depends(get_verified_email)):
         db.close()
     
     return {"message": "Account data wiped successfully"}
+
+
+@router.post("/promocode/validate")
+def validate_promocode(promocode: str, email: str = Depends(get_verified_email), db: Session = Depends(get_db)):
+    """
+    🎉 Validate and apply a promocode to the user's profile.
+    Can be called during profile creation or anytime afterwards (one-time per profile).
+    """
+    try:
+        result = validate_and_apply_promocode(db, email, promocode)
+        return result
+    except HTTPException as e:
+        raise e

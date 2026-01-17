@@ -12,6 +12,7 @@ from fastapi.responses import Response
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from app.api.profile import router as profile_router
 from app.api.billing import router as billing_router
+from app.api.promocode import router as promocode_router
 from sqlalchemy.orm import Session
 import io
 import re
@@ -29,6 +30,7 @@ from app.models.blog import BlogPost
 from app.models.comment import Comment
 from app.models.like import BlogLike
 from app.models.comment_like import CommentLike
+from app.models.promocode import Promocode
 
 from fastapi.templating import Jinja2Templates
 from fastapi import Request
@@ -611,6 +613,7 @@ app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
 app.include_router(profile_router, prefix="/api")
 app.include_router(billing_router)
+app.include_router(promocode_router, prefix="/api")
 
 from app.api.refine import router as refine_router
 app.include_router(refine_router)

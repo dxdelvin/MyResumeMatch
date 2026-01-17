@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Float, Integer, String
+from sqlalchemy import Column, Float, Integer, String, Boolean
 from app.database import Base
 
 class Profile(Base):
@@ -12,4 +12,8 @@ class Profile(Base):
     location = Column(String)
     linkedin = Column(String)
     portfolio = Column(String)
-    credits = Column(Float, default=5.0)  # Default free credits upon profile creation    
+    credits = Column(Float, default=5.0)  # Default free credits upon profile creation
+    
+    # Promocode tracking
+    promocode_used = Column(String, nullable=True)  # Track which promocode (if any) was used
+    promocode_redeemed = Column(Boolean, default=False)  # Ensure one-time use per profile    

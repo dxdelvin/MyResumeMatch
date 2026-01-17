@@ -2,11 +2,17 @@ User-agent: *
 Allow: /
 Allow: /pricing
 Allow: /builder
+Allow: /blog
+Allow: /blog/
 Allow: /privacy-policy
 Allow: /extra/contact
 
 Disallow: /profile
 Disallow: /api/
 Disallow: /result/
+Disallow: /admin/
+
+# Crawl-delay for polite crawling
+Crawl-delay: 1
 
 Sitemap: https://myresumematch.com/sitemap.xml

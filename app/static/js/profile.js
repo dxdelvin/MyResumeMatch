@@ -25,6 +25,82 @@ function autofillFromGoogleIfEmpty() {
   }
 }
 
+// 🎉 Handle Promocode Application
+async function applyPromocodeButton() {
+  const promocodeInput = document.getElementById("promocode");
+  const promocode = promocodeInput.value.trim().toUpperCase();
+  const msgDiv = document.getElementById("promoMessage");
+  const applyBtn = document.getElementById("applyPromoBtn");
+
+  if (!promocode) {
+    msgDiv.style.display = "block";
+    msgDiv.style.background = "#fee2e2";
+    msgDiv.style.color = "#dc2626";
+    msgDiv.innerText = "⚠️ Please enter a promocode";
+    return;
+  }
+
+  // Disable button during request
+  applyBtn.disabled = true;
+  applyBtn.innerText = "Validating...";
+
+  try {
+    const res = await authorizedFetch("/api/promocode/validate?promocode=" + encodeURIComponent(promocode), {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${user.token}`
+      }
+    });
+
+    if (!res) {
+      msgDiv.style.display = "block";
+      msgDiv.style.background = "#fee2e2";
+      msgDiv.style.color = "#dc2626";
+      msgDiv.innerText = "❌ Network error";
+      applyBtn.disabled = false;
+      applyBtn.innerText = "Apply Code";
+      return;
+    }
+
+    if (res.ok) {
+      const data = await res.json();
+      msgDiv.style.display = "block";
+      msgDiv.style.background = "#dcfce7";
+      msgDiv.style.color = "#166534";
+      msgDiv.innerText = `✅ ${data.message}`;
+      
+      // Update credit display
+      const creditDisplay = document.getElementById("profileCreditCount");
+      if (creditDisplay) {
+        creditDisplay.innerText = data.total_credits || data.credits_awarded;
+      }
+      
+      // Disable input and button after successful redemption
+      promocodeInput.disabled = true;
+      applyBtn.disabled = true;
+      applyBtn.innerText = "Applied ✓";
+      applyBtn.style.background = "#10B981";
+    } else {
+      const error = await res.json();
+      msgDiv.style.display = "block";
+      msgDiv.style.background = "#fee2e2";
+      msgDiv.style.color = "#dc2626";
+      msgDiv.innerText = `❌ ${error.detail || "Invalid promocode"}`;
+      applyBtn.disabled = false;
+      applyBtn.innerText = "Apply Code";
+    }
+  } catch (err) {
+    console.error(err);
+    msgDiv.style.display = "block";
+    msgDiv.style.background = "#fee2e2";
+    msgDiv.style.color = "#dc2626";
+    msgDiv.innerText = "❌ Error validating promocode";
+    applyBtn.disabled = false;
+    applyBtn.innerText = "Apply Code";
+  }
+}
+
 async function loadProfile() {
   const title = document.getElementById("pageTitle");
   const subtitle = document.getElementById("pageSubtitle");
@@ -77,6 +153,23 @@ async function loadProfile() {
       const creditDisplay = document.getElementById("profileCreditCount");
       if (creditDisplay) {
           creditDisplay.innerText = profile.credits || 0;
+      }
+
+      // Show/hide promocode section based on redemption status
+      const promoInputSection = document.getElementById("promoInputSection");
+      const promoAppliedMessage = document.getElementById("promoAppliedMessage");
+      const promoCodeDisplay = document.getElementById("appliedPromoCode");
+      
+      if (profile.promocode_redeemed) {
+        if (promoInputSection) promoInputSection.style.display = "none";
+        if (promoAppliedMessage) promoAppliedMessage.style.display = "block";
+        // Show which code was applied
+        if (promoCodeDisplay && profile.promocode_used) {
+          promoCodeDisplay.innerText = profile.promocode_used;
+        }
+      } else {
+        if (promoInputSection) promoInputSection.style.display = "block";
+        if (promoAppliedMessage) promoAppliedMessage.style.display = "none";
       }
 
       const historyContainer = document.getElementById("paymentHistoryContainer");
@@ -132,10 +225,18 @@ async function loadProfile() {
 // Save profile
 async function saveProfile() {
   const fullName = document.getElementById("fullName").value.trim();
+  const btn = document.querySelector('#profileForm button[type="submit"]');
+  const originalText = btn ? btn.innerText : "Save Profile";
 
   if (!fullName) {
-    alert("Full name is required");
+    showToast("Full name is required", "error");
     return;
+  }
+
+  // Disable button during save
+  if (btn) {
+    btn.disabled = true;
+    btn.innerText = "Saving...";
   }
 
   // 🔒 SECURE: No email field, it comes from JWT token
@@ -157,20 +258,38 @@ async function saveProfile() {
       body: JSON.stringify(payload),
     });
 
-    if (!res) return; // Network error handled by authorizedFetch
-
-    if (res.ok) {
-        showToast("Profile updated successfully!", "success");
-        setTimeout(() => window.location.href = "/builder", 2200);
-    } else {
-        showToast("Failed to save profile", "error");
+    if (!res) {
+      // Network error handled by authorizedFetch
+      if (btn) {
         btn.disabled = false;
         btn.innerText = originalText;
+      }
+      return;
+    }
+
+    if (res.ok) {
+      const data = await res.json();
+      // Check if there was a promocode error during profile creation
+      if (data.error) {
+        showToast(data.error, "error");
+      }
+      showToast(data.message || "Profile saved successfully!", "success");
+      setTimeout(() => window.location.href = "/builder", 2200);
+    } else {
+      const errorData = await res.json().catch(() => ({}));
+      showToast(errorData.detail || "Failed to save profile", "error");
+      if (btn) {
+        btn.disabled = false;
+        btn.innerText = originalText;
+      }
     }
   } catch (err) {
-    showToast("Network error", "error");
-    btn.disabled = false;
-    btn.innerText = originalText;
+    console.error("Save profile error:", err);
+    showToast("Network error. Please try again.", "error");
+    if (btn) {
+      btn.disabled = false;
+      btn.innerText = originalText;
+    }
   }
 }
 
@@ -182,6 +301,23 @@ document.addEventListener("DOMContentLoaded", () => {
     form.addEventListener("submit", (e) => {
       e.preventDefault();
       saveProfile();
+    });
+  }
+
+  // Setup promocode button
+  const applyPromoBtn = document.getElementById("applyPromoBtn");
+  if (applyPromoBtn) {
+    applyPromoBtn.addEventListener("click", applyPromocodeButton);
+  }
+
+  // Allow Enter key to apply promocode
+  const promocodeInput = document.getElementById("promocode");
+  if (promocodeInput) {
+    promocodeInput.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        applyPromocodeButton();
+      }
     });
   }
 });
