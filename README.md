@@ -1,48 +1,39 @@
 # Resume Builder AI
 
-A web-based AI-powered resume builder that generates ATS-optimized resumes
-based on user input, job descriptions, and selected resume styles
-(Harvard, Normal, Minimal, Custom).
-<img width="1545" height="938" alt="image" src="https://github.com/user-attachments/assets/4148d8e6-385b-4195-a908-df6668c7cbff" />
-<img width="1705" height="965" alt="image" src="https://github.com/user-attachments/assets/3a40a347-bb0f-4dc1-ac12-d5ce6d92fda7" />
-<img width="1017" height="963" alt="image" src="https://github.com/user-attachments/assets/06bbc1fd-8c4c-48a0-9cd7-ad87fdba6f47" />
+Build clean, ATS-friendly resumes and also cover letters from a simple web UI. Choose a layout
+(Harvard, Normal, Minimal, or Custom), add your details, and export to PDF.
+
+<img width="1545" height="938" alt="Resume builder preview 1" src="https://github.com/user-attachments/assets/4148d8e6-385b-4195-a908-df6668c7cbff" />
+<img width="1705" height="965" alt="Resume builder preview 2" src="https://github.com/user-attachments/assets/3a40a347-bb0f-4dc1-ac12-d5ce6d92fda7" />
+<img width="1017" height="963" alt="Resume builder preview 3" src="https://github.com/user-attachments/assets/06bbc1fd-8c4c-48a0-9cd7-ad87fdba6f47" />
 
 ---
 
-## 🚀 Tech Stack
+## Highlights
 
-### Frontend
-- HTML
-- CSS
-- Vanilla JavaScript
-
-### Backend
-- Python
-- FastAPI
-
-### Database
-- Supabase (PostgreSQL)
-
-### Authentication
-- Google Sign-In (Client-side)
-
-### AI
-- OpenAI API
-
----
-
-## 🧠 Core Features
-
-- Google Login
-- User Profile Management
-- AI Resume Generation (HTML + CSS)
-- Multiple Resume Styles
-- Inline Resume Editing
-- Print / Save as PDF
+- Google login
+- Profile management
+- Resume generation (HTML + CSS)
+- Multiple resume styles
+- Inline editing
+- Print / save as PDF
 - Credit-based usage (planned)
 
 ---
-## ⚙️ Environment Variables
+
+## Tech Stack
+
+- Frontend: HTML, CSS, Vanilla JavaScript
+- Backend: Python, FastAPI
+- Database: Supabase (PostgreSQL)
+- Auth: Google Sign-In (client-side)
+- AI: OpenAI API
+
+---
+
+## Getting Started
+
+### 1) Set environment variables
 
 Create a `.env` file in the project root:
 
@@ -53,32 +44,47 @@ GOOGLE_CLIENT_ID=""
 GOOGLE_CLIENT_SECRET=""
 ```
 
-▶️ Run Locally
-1️⃣ Create virtual environment
+### 2) Install and run
+
+Create a virtual environment:
+
 ```
 python -m venv venv
 ```
-2️⃣ Activate it
-# Windows
+
+Activate it:
+
+**Windows**
 ```
 venv\Scripts\activate
 ```
-# macOS/Linux
+
+**macOS / Linux**
 ```
 source venv/bin/activate
 ```
-3️⃣ Install dependencies
+
+Install dependencies:
+
 ```
 pip install -r requirements.txt
 ```
-4️⃣ Run server
+
+Run the server:
+
 ```
 uvicorn app.main:app --reload
 ```
 
+Open: http://localhost:8000
 
-Open:
+---
 
-http://localhost:8000
+## Project Structure
+
+- app/ — FastAPI app, routes, services, and models
+- static/ — HTML, CSS, JS, and assets
+
+---
 
 
