@@ -41,13 +41,13 @@
   <meta name="twitter:title" content="{{ title }}" />
   <meta name="twitter:description" content="Paste a Job Description -> Get a Resume. Try the AI Resume Builder now." />
 
-  <link rel="preload" href="/static/css/login.css" as="style" onload="this.rel='stylesheet'">
-  <link rel="preload" href="/static/css/navbar.css" as="style" onload="this.rel='stylesheet'">
-  <link rel="preload" href="/static/css/styles.css" as="style" onload="this.rel='stylesheet'">
+  <link rel="preload" href="/static/css/login.css?v={{ v }}" as="style" onload="this.rel='stylesheet'">
+  <link rel="preload" href="/static/css/navbar.css?v={{ v }}" as="style" onload="this.rel='stylesheet'">
+  <link rel="preload" href="/static/css/styles.css?v={{ v }}" as="style" onload="this.rel='stylesheet'">
   <noscript>
-    <link rel="stylesheet" href="/static/css/login.css" />
-    <link rel="stylesheet" href="/static/css/navbar.css" />
-    <link rel="stylesheet" href="/static/css/styles.css" />
+    <link rel="stylesheet" href="/static/css/login.css?v={{ v }}" />
+    <link rel="stylesheet" href="/static/css/navbar.css?v={{ v }}" />
+    <link rel="stylesheet" href="/static/css/styles.css?v={{ v }}" />
   </noscript>
   
   <!-- DNS prefetch for external resources -->
@@ -627,8 +627,8 @@
     </div>
   </footer>
 
-  <script defer src="/static/js/auth.js"></script>
-  <script defer src="/static/js/common.js"></script>
+  <script defer src="/static/js/auth.js?v={{ v }}"></script>
+  <script defer src="/static/js/common.js?v={{ v }}"></script>
   <script>
     // Scroll-reveal observer
     (function(){
