@@ -12,7 +12,7 @@ class Profile(Base):
     location = Column(String)
     linkedin = Column(String)
     portfolio = Column(String)
-    credits = Column(Float, default=5.0)  # Default free credits upon profile creation
+    credits = Column(Float, default=2.0)  # Default free credits upon profile creation
     
     # Promocode tracking
     promocode_used = Column(String, nullable=True)  # Track which promocode (if any) was used

@@ -155,7 +155,10 @@
 
       <div class="pane-header pane-header-layout">
         <div>
-          <h2 id="builder-title">Builder Studio</h2>
+          <div class="builder-title-row">
+            <h2 id="builder-title">Builder Studio</h2>
+            <span class="mode-pill"><span class="material-icons-round" style="font-size:11px">auto_awesome</span> AI-Powered</span>
+          </div>
           <p id="builder-subtitle" class="modal-subtitle">Craft your perfect application</p>
         </div>
 
@@ -264,6 +267,7 @@
         </div>
 
         <button class="btn-magic" id="generateBtn" onclick="handleMainGenerate()">
+          <span class="btn-shimmer"></span>
           <span class="material-icons-round">auto_awesome</span>
           Generate Resume
         </button>
@@ -306,17 +310,30 @@
 
         <div id="output" class="paper-a4">
           <div class="empty-state">
-            <span class="material-icons-round empty-icon">description</span>
-            <h3>Ready to Create</h3>
-            <p>Enter your details on the left and hit Generate.</p>
+            <div class="empty-visual">
+              <span class="material-icons-round empty-icon">description</span>
+              <div class="empty-pulse-ring"></div>
+            </div>
+            <h3>Your Resume Starts Here</h3>
+            <p>Paste your experience, add a target job description, and let AI craft the perfect resume.</p>
+            <div class="empty-steps">
+              <div class="empty-step"><span class="empty-step-num">1</span> Paste Experience</div>
+              <span class="empty-step-arrow material-icons-round">east</span>
+              <div class="empty-step"><span class="empty-step-num">2</span> Add Job Desc</div>
+              <span class="empty-step-arrow material-icons-round">east</span>
+              <div class="empty-step"><span class="empty-step-num">3</span> Generate</div>
+            </div>
           </div>
         </div>
 
         <div id="output-cl" class="paper-a4 hidden">
           <div class="empty-state">
-            <span class="material-icons-round empty-icon">mark_email_unread</span>
-            <h3>Cover Letter</h3>
-            <p>Switching contexts... <br>Click "Generate Cover Letter" to start.</p>
+            <div class="empty-visual">
+              <span class="material-icons-round empty-icon">mark_email_unread</span>
+              <div class="empty-pulse-ring"></div>
+            </div>
+            <h3>Your Cover Letter Awaits</h3>
+            <p>Click "Generate Cover Letter" to create a tailored, professional letter in seconds.</p>
           </div>
         </div>
 
@@ -486,9 +503,12 @@
 
 
   <div id="loadingOverlay" class="loading-overlay">
-    <div class="spinner"></div>
-    <p>⏳ Working on your document...</p>
-    <div class="loading-tip"></div>
+    <div class="loading-content">
+      <div class="spinner"></div>
+      <p class="loading-title">Crafting Your Document...</p>
+      <div class="loading-progress-bar"><div class="loading-progress-fill"></div></div>
+      <div class="loading-tip"></div>
+    </div>
   </div>
 
 

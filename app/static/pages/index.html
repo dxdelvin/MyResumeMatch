@@ -196,7 +196,7 @@
     "name": "Is MyResumeMatch free to use?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "MyResumeMatch offers 5 free credits to start, allowing you to generate up to 5 complete resume and cover letter packages. After that, we have affordable pricing plans for continued access to our AI-powered career tools."
+      "text": "MyResumeMatch offers 2 free credits to start, allowing you to try the full resume and cover letter generation experience. After that, we have affordable pricing plans for continued access to our AI-powered career tools."
     }
   }]
 }
@@ -242,429 +242,350 @@
     </div>
   </nav>
   <main>
+    <!-- ====== HERO ====== -->
     <header class="hero">
       <div class="container hero-container">
         <div class="hero-content">
-          <span class="badge" style="background: #dcfce7; color: #166534; border: 1px solid #bbf7d0;">
-            🎁 Gift: Generate upto 5 CVs For Free.
-          </span>
+          <div class="hero-pill">
+            <span class="hero-pill__dot"></span>
+            <span>AI-Powered &middot; ATS-Optimized &middot; 60 Seconds</span>
+          </div>
+
           <h1>
             {{ h1_text }}
             <span class="text-gradient">From Job Descriptions.</span>
           </h1>
+
           <p class="hero-subtext">{{ hero_subtext }}</p>
-          
-          <div style="margin-bottom: 24px;">
-            <a href="https://www.producthunt.com/products/resume-match?embed=true&amp;utm_source=badge-featured&amp;utm_medium=badge&amp;utm_campaign=badge-resume-match" target="_blank" rel="noopener noreferrer"><img alt="Resume Match - Build Resumes and Cover Letter From Job Descriptions | Product Hunt" width="250" height="54" src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1057795&amp;theme=light&amp;t=1769728519829"></a>
-          </div>
 
           {% if job_role %}
           <p class="hero-blog-link">
             <a href="/blog/how-to-write-a-winning-{{ job_role }}-resume-2026" class="blog-link">
-              📖 Read our guide: How to Write a Winning {{ job_role|replace('-', ' ')|title }} Resume
+              Read our guide: How to Write a Winning {{ job_role|replace('-', ' ')|title }} Resume &rarr;
             </a>
           </p>
           {% endif %}
 
-          <div class="hero-stats" aria-label="Product highlights">
-            <div class="hero-stat">
-              <div class="hero-stat__value">Cover Letter</div>
-              <div class="hero-stat__label">By Setting Your Own Narrative</div>
-            </div>
-            <div class="hero-stat">
-              <div class="hero-stat__value">Styles and Colors</div>
-              <div class="hero-stat__label">Customize Your Resume</div>
-            </div>
-            <div class="hero-stat">
-              <div class="hero-stat__value">Match Fast</div>
-              <div class="hero-stat__label">From JD to resume in seconds</div>
-            </div>
-          </div>
-
-          <div class="login-wrapper" id="hero-login-area">
-            <p class="login-label">Sign in to claim your <strong>5 Free Credits</strong></p>
-
+          <!-- Logged-out CTA -->
+          <div class="hero-cta-row" id="hero-login-area">
             <div id="g_id_onload"
               data-client_id="109724056179-v1ggq3b91h7jmfa9ivi1etjvq5q5q9ui.apps.googleusercontent.com"
               data-callback="handleGoogleLogin" data-auto_prompt="false"></div>
 
-            <div class="g_id_signin" data-type="standard" data-size="large" data-theme="filled_blue"
-              data-text="sign_in_with" data-shape="rectangular" data-logo_alignment="left" data-width="320"></div>
+            <div class="hero-cta-actions">
+              <div class="g_id_signin" data-type="standard" data-size="large" data-theme="filled_blue"
+                data-text="sign_in_with" data-shape="rectangular" data-logo_alignment="left" data-width="300"></div>
+              <span class="hero-cta-divider">or</span>
+              <a href="/builder" class="btn-hero-secondary">Try the Builder</a>
+            </div>
 
-            <p class="terms">
-              By clicking, you agree to our Terms & Privacy Policy.
-            </p>
-
-            <p class="terms privacy-note">
-              Your resume stays on your device. We only store your email for login.
-            </p>
-
+            <p class="hero-cta-sub">Sign in to get <strong>2 Free Credits</strong> &mdash; no card required.</p>
           </div>
 
-          <div id="hero-welcome-area" style="display: none">
-            <a href="/builder" class="btn-primary-large">Go to Builder &rarr;</a>
+          <!-- Logged-in CTA -->
+          <div id="hero-welcome-area" style="display:none;">
+            <a href="/builder" class="btn-primary-large">Open Builder &rarr;</a>
+          </div>
+
+          <!-- Social proof -->
+          <div class="hero-proof">
+            <div class="hero-proof__avatars">
+              <span class="mini-avatar" style="background:#0a66c2;">B</span>
+              <span class="mini-avatar" style="background:#7c3aed;">S</span>
+              <span class="mini-avatar" style="background:#059669;">A</span>
+              <span class="mini-avatar" style="background:#e11d48;">D</span>
+            </div>
+            <span class="hero-proof__text"><strong>{{ user_count }}+</strong> resumes built and counting</span>
           </div>
         </div>
 
         <div class="hero-visual">
-          <div class="abstract-card">
-            <div class="card-header">
-              <div class="resume-avatar">
-                <div class="avatar-initials">JD</div>
-              </div>
-              <div class="resume-info">
-                <div class="resume-name">Zoe Dsouza</div>
-                <div class="resume-title">Senior Software Engineer</div>
-              </div>
+          <div class="hero-mockup">
+            <div class="mockup-toolbar">
+              <span class="mockup-dot red"></span>
+              <span class="mockup-dot yellow"></span>
+              <span class="mockup-dot green"></span>
+              <span class="mockup-title">ResumeMATCH Builder</span>
             </div>
-            <div class="card-body">
-              <div class="resume-section">
-                <div class="section-title">Experience</div>
-                <div class="resume-item">
-                  <div class="item-title">Lead Developer</div>
-                  <div class="item-subtitle">Tech Corp • 2020-Present</div>
+            <div class="mockup-body">
+              <div class="mockup-sidebar">
+                <div class="mockup-sidebar-item active">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                  Resume
                 </div>
-                <div class="resume-item">
-                  <div class="item-title">Software Engineer</div>
-                  <div class="item-subtitle">StartupXYZ • 2018-2020</div>
+                <div class="mockup-sidebar-item">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                  Cover Letter
                 </div>
               </div>
-              <div class="resume-section">
-                <div class="section-title">Skills</div>
-                <div class="skills-list">
-                  <span class="skill-tag">Python</span>
-                  <span class="skill-tag">React</span>
-                  <span class="skill-tag">C++</span>
-                  <span class="skill-tag">Team Player</span>
+              <div class="mockup-content">
+                <div class="mockup-resume-header">
+                  <div class="mockup-name-block">
+                    <div class="mockup-name">Zoe Dsouza</div>
+                    <div class="mockup-role">Senior Software Engineer</div>
+                  </div>
+                  <span class="mockup-ats-badge">ATS Score: 92%</span>
+                </div>
+                <div class="mockup-section-block">
+                  <div class="mockup-section-title">Experience</div>
+                  <div class="mockup-line w-full"></div>
+                  <div class="mockup-line w-90"></div>
+                  <div class="mockup-line w-75"></div>
+                </div>
+                <div class="mockup-section-block">
+                  <div class="mockup-section-title">Skills</div>
+                  <div class="mockup-tags">
+                    <span class="mockup-tag">Python</span>
+                    <span class="mockup-tag">React</span>
+                    <span class="mockup-tag">AWS</span>
+                    <span class="mockup-tag">Docker</span>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div class="floating-badge badge-1">
-              <span>✨ ATS Score: 92%</span>
-            </div>
-            <div class="floating-badge badge-2">
-              <span>🚀 AI Optimized</span>
             </div>
           </div>
-          <div class="blur-blob"></div>
+          <div class="hero-float-badge badge-top">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            ATS Passed
+          </div>
+          <div class="hero-float-badge badge-bottom">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0a66c2" stroke-width="2.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+            &lt;60s Generated
+          </div>
         </div>
       </div>
     </header>
 
+    <!-- ====== LOGOS / TRUST BAR ====== -->
+    <section class="trust-bar">
+      <div class="container">
+        <div class="trust-bar__inner">
+          <div class="trust-bar__stat">
+            <span class="trust-bar__num">{{ user_count }}+</span>
+            <span class="trust-bar__label">Users</span>
+          </div>
+          <div class="trust-bar__divider"></div>
+          <div class="trust-bar__stat">
+            <span class="trust-bar__num">&lt;60s</span>
+            <span class="trust-bar__label">Generation</span>
+          </div>
+          <div class="trust-bar__divider"></div>
+          <div class="trust-bar__stat">
+            <span class="trust-bar__num">4 Templates</span>
+            <span class="trust-bar__label">ATS-Tested</span>
+          </div>
+          <div class="trust-bar__divider"></div>
+          <div class="trust-bar__stat">
+            <span class="trust-bar__num">PDF + DOCX</span>
+            <span class="trust-bar__label">Export</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== HOW IT WORKS ====== -->
+    <section id="how-it-works" class="section-white">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-eyebrow">How It Works</span>
+          <h2>Three Steps. One Perfect Resume.</h2>
+        </div>
+        <div class="steps-grid">
+          <div class="step-card" data-reveal>
+            <div class="step-num">1</div>
+            <h3>Upload or Paste</h3>
+            <p>Drop your existing resume or paste raw text &mdash; the AI reads your full background in seconds.</p>
+          </div>
+          <div class="step-connector">
+            <svg width="40" height="16" viewBox="0 0 40 16" fill="none"><path d="M0 8h32M28 2l6 6-6 6" stroke="#cbd5e1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="step-card" data-reveal>
+            <div class="step-num">2</div>
+            <h3>Add the Job Description</h3>
+            <p>Paste the target job listing. AI extracts keywords and maps your experience to the role.</p>
+          </div>
+          <div class="step-connector">
+            <svg width="40" height="16" viewBox="0 0 40 16" fill="none"><path d="M0 8h32M28 2l6 6-6 6" stroke="#cbd5e1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="step-card" data-reveal>
+            <div class="step-num">3</div>
+            <h3>Download &amp; Apply</h3>
+            <p>Get a tailored resume + cover letter as polished PDFs. Ready to send in one click.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== VIDEO DEMO ====== -->
     <section id="demo" class="demo-section">
       <div class="container">
         <div class="section-header">
-          <h2>See It In Action</h2>
-          <p>Watch how easy it is to create tailored resumes and cover letters</p>
+          <span class="section-eyebrow" style="color:#94a3b8;">See It In Action</span>
+          <h2>Watch a Resume Get Built in Real Time</h2>
         </div>
-
         <div class="video-wrapper">
           <video autoplay muted loop width="100%" playsinline loading="lazy">
             <source src="/static/video/ResumeAI.mp4" type="video/mp4" />
             Your browser does not support the video tag.
           </video>
         </div>
-
         <h3 class="arcade-heading">Interactive Demo</h3>
-        <!--ARCADE EMBED START - Click to Load for Performance-->
         <div class="arcade-embed" id="arcade-placeholder" onclick="loadArcadeDemo()" style="cursor:pointer;">
           <div class="arcade-placeholder-content">
-            <span style="font-size:48px;">▶️</span>
-            <p style="margin:10px 0 0;font-weight:600;color:#0a66c2;">Click to Load Interactive Demo</p>
-            <p style="font-size:0.85rem;color:#666;">Learn how to make one!</p>
+            <svg width="56" height="56" viewBox="0 0 56 56" fill="none"><circle cx="28" cy="28" r="28" fill="rgba(255,255,255,0.15)"/><polygon points="22,18 40,28 22,38" fill="#fff"/></svg>
+            <p style="margin:12px 0 0;font-weight:600;color:#fff;">Click to load interactive walkthrough</p>
           </div>
         </div>
         <script>
-        function loadArcadeDemo() {
-          var container = document.getElementById('arcade-placeholder');
-          container.innerHTML = '<iframe src="https://demo.arcade.software/J1bJ1eX4DZ8thTIVKXM4?embed&embed_mobile=inline&embed_desktop=inline&show_copy_link=true" title="Create a Resume and Cover Letter Tailored to a Job Description" frameborder="0" loading="eager" style="width:100%;height:100%;border:0;"></iframe>';
-          container.style.cursor = 'default';
-          container.onclick = null;
-        }
+        function loadArcadeDemo(){var c=document.getElementById('arcade-placeholder');c.innerHTML='<iframe src="https://demo.arcade.software/J1bJ1eX4DZ8thTIVKXM4?embed&embed_mobile=inline&embed_desktop=inline&show_copy_link=true" title="Interactive Demo" frameborder="0" loading="eager" style="width:100%;height:100%;border:0;"></iframe>';c.style.cursor='default';c.onclick=null;}
         </script>
-        <!--ARCADE EMBED END-->
       </div>
     </section>
 
-    <section id="features" class="features-section">
+    <!-- ====== FEATURES ====== -->
+    <section id="features" class="section-light">
       <div class="container">
         <div class="section-header">
-          <h2>Why use ResumeMATCH?</h2>
-          <p>Built by hiring managers who've reviewed thousands of resumes.</p>
+          <span class="section-eyebrow">Features</span>
+          <h2>Everything You Need to <span class="text-gradient">Land Interviews</span></h2>
         </div>
-
         <div class="features-grid">
-          <div class="feature-card">
-            <div class="icon-box">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z" />
-              </svg>
+          <div class="feature-card" data-reveal>
+            <div class="feature-icon gradient-blue">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456z"/></svg>
             </div>
-            <h3>AI-Refines</h3>
-            <p>
-              Want to Translate, Improve, Add, Delete or Adjust any section of your resume? Use our AI Adjust feature to
-              fine-tune your resume content as per your needs.
-            </p>
+            <h3>AI Refinement</h3>
+            <p>Translate, rewrite, or expand any section. The AI matches tone and keywords to the target role.</p>
           </div>
-
-          <div class="feature-card">
-            <div class="icon-box">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z" />
-              </svg>
+          <div class="feature-card" data-reveal>
+            <div class="feature-icon gradient-green">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z"/></svg>
             </div>
-            <h3>ATS Friendly</h3>
-            <p>
-              Our templates are rigorously tested against Applicant Tracking
-              Systems to ensure your resume gets read.
-            </p>
+            <h3>ATS-Optimized</h3>
+            <p>Every template is tested against real ATS systems so recruiters actually see your application.</p>
           </div>
-
-          <div class="feature-card">
-            <div class="icon-box">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
-              </svg>
+          <div class="feature-card" data-reveal>
+            <div class="feature-icon gradient-purple">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>
             </div>
-            <h3>One-Click PDF Export</h3>
-            <p>
-              Download your resume in a polished PDF format that keeps your
-              formatting intact on any device.
-            </p>
+            <h3>Cover Letters</h3>
+            <p>AI writes a personalized cover letter connecting your achievements to the employer's needs.</p>
           </div>
-        </div>
-      </div>
-    </section>
-        <section id="why-fail" class="features-section">
-      <div class="container">
-        <div class="section-header">
-          <h2>Why Most Resumes & Cover Letters Get Rejected</h2>
-        </div>
-
-        <div class="comparison-grid">
-          <div class="col-left">
-            <h3>Why Your Job Applications Fail</h3>
-
-            <div class="item">
-              <div>ATS Systems Reject You</div>
-              <div>Missing crucial keywords from job descriptions</div>
+          <div class="feature-card" data-reveal>
+            <div class="feature-icon gradient-amber">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/></svg>
             </div>
-
-            <div class="item">
-              <div>Generic Applications</div>
-              <div>Same resume & cover letter sent to every job</div>
-            </div>
-
-            <div class="item">
-              <div>Poor Cover Letters</div>
-              <div>Generic templates that don't match the role</div>
-            </div>
-
-            <div class="item">
-              <div>No Interview Calls</div>
-              <div>Hours spent applying with zero responses</div>
-            </div>
-          </div>
-
-          <div class="col-right">
-            <h3>How MyResumeMatch Gets You Hired</h3>
-
-            <div class="item">
-              <div>AI-Powered Matching</div>
-              <div>Resume & cover letter perfectly aligned to JD</div>
-            </div>
-
-            <div class="item">
-              <div>ATS-Optimized Content</div>
-              <div>Keywords that pass both recruiters & systems</div>
-            </div>
-
-            <div class="item">
-              <div>Smart Cover Letters</div>
-              <div>Personalized stories that showcase your value</div>
-            </div>
-
-            <div class="item">
-              <div>3-Step Process</div>
-              <div>Upload Resume → Paste Job Description → Download</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-    
-    <section id="cover-letter-feature" class="features-section">
-      <div class="container">
-        <div class="section-header">
-          <h2>AI Cover Letters That Get You Interviews</h2>
-          <p>Stop sending generic cover letters. Our AI writes compelling, personalized cover letters that match your experience to the job requirements.</p>
-        </div>
-
-        <div class="features-grid">
-          <div class="feature-card">
-            <div class="icon-box">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
-              </svg>
-            </div>
-            <h3>Job-Specific Content</h3>
-            <p>
-              Our AI analyzes the job description and your resume to create cover letters that address specific requirements and showcase relevant achievements.
-            </p>
-          </div>
-
-          <div class="feature-card">
-            <div class="icon-box">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z" />
-              </svg>
-            </div>
-            <h3>Professional Tone</h3>
-            <p>
-              Each cover letter maintains a professional yet engaging tone that highlights your unique value proposition and career aspirations.
-            </p>
-          </div>
-
-          <div class="feature-card">
-            <div class="icon-box">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
-              </svg>
-            </div>
-            <h3>Instant Download</h3>
-            <p>
-              Get your professionally crafted cover letter in seconds. Download as PDF or copy directly to your clipboard for easy applications.
-            </p>
+            <h3>One-Click Export</h3>
+            <p>Download as a polished PDF that keeps formatting intact on every device and platform.</p>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Testimonials Section -->
-    <section id="testimonials" class="testimonials-section">
+    <!-- ====== SOCIAL PROOF NUMBERS ====== -->
+    <section class="metrics-section">
+      <div class="container">
+        <div class="metrics-grid">
+          <div class="metric-item">
+            <span class="metric-num">{{ user_count }}+</span>
+            <span class="metric-label">Resumes Built</span>
+          </div>
+          <div class="metric-item">
+            <span class="metric-num">4.9<span class="metric-star">&#9733;</span></span>
+            <span class="metric-label">User Rating</span>
+          </div>
+          <div class="metric-item">
+            <span class="metric-num">&lt;60s</span>
+            <span class="metric-label">Avg. Generation</span>
+          </div>
+          <div class="metric-item">
+            <span class="metric-num">92%</span>
+            <span class="metric-label">ATS Pass Rate</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== TESTIMONIALS ====== -->
+    <section id="testimonials" class="section-white">
       <div class="container">
         <div class="section-header">
-          <h2>What Job Seekers Are Saying</h2>
-          <p>Join thousands who've landed their dream jobs with AI-powered resumes</p>
+          <span class="section-eyebrow">Testimonials</span>
+          <h2>Loved by <span class="text-gradient">Job Seekers</span></h2>
+          <p class="section-desc">Real feedback from people who landed interviews.</p>
         </div>
-
         <div class="testimonials-grid">
-          <div class="testimonial-card">
-            <div class="testimonial-header">
+          <div class="testimonial-card featured" data-reveal>
+            <div class="testimonial-stars"><span class="star">&#9733;&#9733;&#9733;&#9733;&#9733;</span></div>
+            <p class="testimonial-text">"As a recent graduate, I had no idea how to write a good resume. The AI helped me organize my internship experience and projects in a way that actually looks professional."</p>
+            <div class="testimonial-footer">
               <div class="testimonial-avatar">BM</div>
-              <div class="testimonial-info">
-                <h4>Bhavik Maurya</h4>
-              </div>
+              <div><h4 class="testimonial-name">Bhavik Maurya</h4><span class="testimonial-badge">First Resume</span></div>
             </div>
-            <div class="testimonial-stars">
-              <span class="star">★★★★★</span>
-            </div>
-            <p class="testimonial-text">
-              "As a recent graduate, I had no idea how to write a good resume. The AI helped me organize my internship experience and projects in a way that actually looks professional."
-            </p>
-            <span class="testimonial-badge">First Resume</span>
           </div>
-
-          <div class="testimonial-card">
-            <div class="testimonial-header">
+          <div class="testimonial-card" data-reveal>
+            <div class="testimonial-stars"><span class="star">&#9733;&#9733;&#9733;&#9733;&#9733;</span></div>
+            <p class="testimonial-text">"I was spending hours customizing my resume for each application. This tool makes it so much faster to match my skills to what companies are actually looking for."</p>
+            <div class="testimonial-footer">
               <div class="testimonial-avatar">SS</div>
-              <div class="testimonial-info">
-                <h4>Sreejith Sreenivasan</h4>
-              </div>
+              <div><h4 class="testimonial-name">Sreejith Sreenivasan</h4><span class="testimonial-badge">Saves Time</span></div>
             </div>
-            <div class="testimonial-stars">
-              <span class="star">★★★★★</span>
-            </div>
-            <p class="testimonial-text">
-              "I was spending hours customizing my resume for each application. This tool makes it so much faster to match my skills to what companies are actually looking for."
-            </p>
-            <span class="testimonial-badge">Saves Time</span>
           </div>
-
-          <div class="testimonial-card">
-            <div class="testimonial-header">
+          <div class="testimonial-card" data-reveal>
+            <div class="testimonial-stars"><span class="star">&#9733;&#9733;&#9733;&#9733;&#9733;</span></div>
+            <p class="testimonial-text">"The cover letter feature is really helpful. I always struggled with writing them, but the AI creates something that sounds natural and personalized."</p>
+            <div class="testimonial-footer">
               <div class="testimonial-avatar">AG</div>
-              <div class="testimonial-info">
-                <h4>Arjit Garg</h4>
-              </div>
+              <div><h4 class="testimonial-name">Arjit Garg</h4><span class="testimonial-badge">Cover Letters</span></div>
             </div>
-            <div class="testimonial-stars">
-              <span class="star">★★★★★</span>
-            </div>
-            <p class="testimonial-text">
-              "The cover letter feature is really helpful. I always struggled with writing them, but the AI creates something that sounds natural and personalized."
-            </p>
-            <span class="testimonial-badge">Better Applications</span>
-          </div>
-        </div>
-
-        <div class="trust-indicators">
-          <div class="trust-item">
-            <div class="trust-number">{{ user_count }}+</div>
-            <div class="trust-label">People Helped</div>
-          </div>
-          <div class="trust-item">
-            <div class="trust-number">Beta</div>
-            <div class="trust-label">Early Stage</div>
-          </div>
-          <div class="trust-item">
-            <div class="trust-number">Free</div>
-            <div class="trust-label">To Try</div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- CTA Section -->
+    <!-- ====== CTA ====== -->
     <section class="cta-section">
+      <div class="cta-float cta-float--left"></div>
+      <div class="cta-float cta-float--right"></div>
       <div class="cta-content">
-        <h2>Ready to Land Your Dream Job?</h2>
-        <p>Join thousands of successful job seekers using AI-powered resumes</p>
+        <span class="cta-eyebrow">Ready?</span>
+        <h2>Your Next Interview Starts Here</h2>
+        <p>Stop sending generic resumes. Build one that actually gets past the ATS and into real hands.</p>
         <div class="cta-buttons">
-          <a href="/builder" class="btn-cta-primary">
-            <span>🚀</span> Start Building Now
-          </a>
-          <a href="#demo" class="btn-cta-secondary">Watch Demo</a>
+          <a href="/builder" class="btn-cta-primary">Start Building &rarr;</a>
+          <a href="#demo" class="btn-cta-ghost">Watch Demo</a>
         </div>
       </div>
     </section>
 
-    <section id="faq" class="features-section" style="background: #fff;">
+    <!-- ====== FAQ ====== -->
+    <section id="faq" class="faq-section">
       <div class="container">
         <div class="section-header">
-          <h2>Frequently Asked Questions</h2>
+          <span class="section-eyebrow">FAQ</span>
+          <h2>Common Questions</h2>
         </div>
-        <div class="faq-grid" style="max-width: 800px; margin: 0 auto; text-align: left;">
-          <div class="faq-item" style="margin-bottom: 20px;">
-            <h3 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 8px;">How does MyResumeMatch create ATS-friendly resumes?</h3>
-            <p>MyResumeMatch uses advanced AI to analyze job descriptions and match your experience with required keywords. Our system ensures your resume passes through Applicant Tracking Systems by optimizing formatting, keywords, and structure that recruiters and AI systems look for.</p>
-          </div>
-
-          <div class="faq-item" style="margin-bottom: 20px;">
-            <h3 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 8px;">Can MyResumeMatch write personalized cover letters?</h3>
-            <p>Yes! Our AI crafts unique cover letters for each job application by analyzing both your resume and the job description. The result is a compelling narrative that connects your specific achievements to the employer's needs, significantly increasing interview rates.</p>
-          </div>
-
-          <div class="faq-item" style="margin-bottom: 20px;">
-            <h3 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 8px;">What resume templates does MyResumeMatch offer?</h3>
-            <p>We provide professional, ATS-tested templates including Harvard, Tech, Modern, and Executive styles. Each template is optimized for readability and keyword density, ensuring your resume looks professional while passing automated screening systems.</p>
-          </div>
-
-          <div class="faq-item" style="margin-bottom: 20px;">
-            <h3 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 8px;">How quickly can I generate a resume and cover letter?</h3>
-            <p>With MyResumeMatch, you can generate both a tailored resume and cover letter in under 60 seconds. Simply upload your existing resume, paste the job description, and download your professionally optimized documents instantly.</p>
-          </div>
-
-          <div class="faq-item">
-            <h3 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 8px;">Is MyResumeMatch free to use?</h3>
-            <p>MyResumeMatch offers 5 free credits to start, allowing you to generate up to 5 complete resume and cover letter packages. After that, we have affordable pricing plans for continued access to our AI-powered career tools.</p>
-          </div>
+        <div class="faq-grid">
+          <details class="faq-item" open>
+            <summary>How does it create ATS-friendly resumes?</summary>
+            <p>Our AI analyzes the job description and matches your experience with the right keywords, formatting, and structure that both ATS systems and recruiters look for.</p>
+          </details>
+          <details class="faq-item">
+            <summary>Can it write personalized cover letters?</summary>
+            <p>Yes. The AI reads your resume and the job description together, then writes a narrative connecting your achievements to the employer's requirements.</p>
+          </details>
+          <details class="faq-item">
+            <summary>What templates are available?</summary>
+            <p>Harvard, Tech, Modern, and Executive &mdash; all ATS-tested and optimized for readability and keyword density.</p>
+          </details>
+          <details class="faq-item">
+            <summary>How fast is it?</summary>
+            <p>Under 60 seconds. Upload your resume, paste the job description, and download your tailored documents instantly.</p>
+          </details>
+          <details class="faq-item">
+            <summary>Is it free to try?</summary>
+            <p>You get 2 free credits on signup. Each credit generates a full resume + cover letter package. No credit card required.</p>
+          </details>
         </div>
       </div>
     </section>
@@ -708,6 +629,19 @@
 
   <script defer src="/static/js/auth.js"></script>
   <script defer src="/static/js/common.js"></script>
+  <script>
+    // Scroll-reveal observer
+    (function(){
+      var items = document.querySelectorAll('[data-reveal]');
+      if(!items.length) return;
+      var obs = new IntersectionObserver(function(entries){
+        entries.forEach(function(e){
+          if(e.isIntersecting){ e.target.classList.add('revealed'); obs.unobserve(e.target); }
+        });
+      }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+      items.forEach(function(el){ obs.observe(el); });
+    })();
+  </script>
   <script>
     // THE INTENT TRACKER
     // Checks if the user landed on a specific "Programmatic" page

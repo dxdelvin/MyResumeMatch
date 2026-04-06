@@ -285,10 +285,11 @@
   
 
   <div class="header-section">
-    <h1>Simple, Pay-As-You-Go <span style="color: var(--primary-blue);">Pricing</span></h1>
-    <p>The AI Resume/Cover Letter Builder with <strong>no monthly subscriptions</strong>. Pay once, own your credits forever.</p>
-    <div style="margin-top: 15px; display: inline-block; background: #f0fdf4; color: #15803d; padding: 8px 16px; border-radius: 20px; font-weight: 600; border: 1px solid #bbf7d0;">
-    ✨ New users start with 5 FREE Credits
+    <span class="pricing-eyebrow">Pricing</span>
+    <h1>Simple, Transparent <span class="text-gradient-pricing">Pricing</span></h1>
+    <p>No subscriptions. No hidden fees. Buy credits once, use them forever.</p>
+    <div class="free-credits-pill">
+      <span class="free-pill-icon">&#10024;</span> New users start with <strong>2 FREE Credits</strong>
     </div>
   </div>
 
@@ -296,78 +297,104 @@
 
     <!-- BASIC -->
     <div class="pricing-card">
+      <div class="card-tier-badge">Starter</div>
       <div class="card-header">
         <h3>Basic</h3>
         <div class="price">
           <span class="original-price" id="original-basic">€1.99</span>
           <span class="amount" id="price-basic">€1.29</span>
         </div>
+        <span class="price-note">one-time payment</span>
       </div>
 
       <ul class="features">
-        <li><strong>20</strong> Credits</li>
-        <li><span class="highlight">👉 Apply to a few carefully chosen jobs</span></li>
-        <li><strong>Best for:</strong> trial / light usage plan</li>
-        <li>AI‑tailored resumes + cover letters</li>
-        <li><span class="highlight">Refine with AI (add/change/translate/grammar)</span></li>
-        <li>ATS Optimization</li>
+        <li><span class="feature-check">&#10003;</span> <strong>20</strong> Credits</li>
+        <li><span class="feature-check">&#10003;</span> AI-tailored resumes + cover letters</li>
+        <li><span class="feature-check">&#10003;</span> ATS Optimization</li>
+        <li><span class="feature-check">&#10003;</span> Refine with AI</li>
+        <li class="feature-highlight">Best for trial / light usage</li>
       </ul>
 
       <button class="btn-primary" onclick="selectPlan('basic')">
-        Buy Credits
+        Get Started
       </button>
     </div>
 
     <!-- POPULAR -->
     <div class="pricing-card popular">
+      <div class="popular-badge">&#9733; Most Popular</div>
       <div class="card-header">
         <h3>Popular</h3>
         <div class="price">
           <span class="original-price" id="original-popular">€3.49</span>
           <span class="amount" id="price-popular">€2.49</span>
         </div>
-        <div class="popular-badge">Most Popular</div>
+        <span class="price-note">one-time payment</span>
       </div>
 
       <ul class="features">
-        <li><strong>60</strong> Credits</li>
-        <li><span class="highlight">👉 Cover your entire job application phase</span></li>
-        <li><strong>Best for:</strong> Active job search across multiple roles</li>
-        <li>⭐ Most users choose this and never need to upgrade</li>
-        <li>AI‑tailored resumes + cover letters</li>
-        <li><span class="highlight">Refine with AI (add/change/translate/grammar)</span></li>
-        <li>ATS Optimization</li>
+        <li><span class="feature-check accent">&#10003;</span> <strong>60</strong> Credits</li>
+        <li><span class="feature-check accent">&#10003;</span> AI-tailored resumes + cover letters</li>
+        <li><span class="feature-check accent">&#10003;</span> ATS Optimization</li>
+        <li><span class="feature-check accent">&#10003;</span> Refine with AI</li>
+        <li class="feature-highlight primary">Cover your entire job search phase</li>
       </ul>
 
       <button class="btn-primary popular-btn" onclick="selectPlan('popular')">
-        Buy Credits
+        Get Popular Plan
       </button>
     </div>
 
     <!-- PRO -->
     <div class="pricing-card">
+      <div class="card-tier-badge">Power User</div>
       <div class="card-header">
         <h3>Pro</h3>
         <div class="price">
           <span class="original-price" id="original-pro">€7.99</span>
           <span class="amount" id="price-pro">€4.99</span>
         </div>
+        <span class="price-note">one-time payment</span>
       </div>
 
       <ul class="features">
-        <li><strong>150</strong> Credits</li>
-        <li><span class="highlight">👉 Built for aggressive job searches</span></li>
-        <li><strong>Best for:</strong> Intensive job hunt, multiple versions, frequent refinements</li>
-        <li>AI‑tailored resumes + cover letters</li>
-        <li><span class="highlight">Refine with AI (add/change/translate/grammar)</span></li>
-        <li>ATS Optimization</li>
+        <li><span class="feature-check">&#10003;</span> <strong>150</strong> Credits</li>
+        <li><span class="feature-check">&#10003;</span> AI-tailored resumes + cover letters</li>
+        <li><span class="feature-check">&#10003;</span> ATS Optimization</li>
+        <li><span class="feature-check">&#10003;</span> Refine with AI</li>
+        <li class="feature-highlight">Intensive hunt, multiple versions</li>
       </ul>
 
       <button class="btn-primary" onclick="selectPlan('pro')">
-        Buy Credits
+        Get Pro Plan
       </button>
     </div>
 
+  </div>
+
+  <!-- Guarantee Strip -->
+  <div class="guarantee-strip">
+    <div class="guarantee-item">
+      <span class="guarantee-icon">&#128274;</span>
+      <div>
+        <strong>Secure Payments</strong>
+        <span>Powered by Stripe</span>
+      </div>
+    </div>
+    <div class="guarantee-item">
+      <span class="guarantee-icon">&#8734;</span>
+      <div>
+        <strong>Credits Never Expire</strong>
+        <span>Use them anytime</span>
+      </div>
+    </div>
+    <div class="guarantee-item">
+      <span class="guarantee-icon">&#128272;</span>
+      <div>
+        <strong>Your Data Is Safe</strong>
+        <span>Never shared or sold</span>
+      </div>
+    </div>
   </div>
 
   <!-- Data Privacy Section -->
@@ -410,20 +437,20 @@
     <h2>Frequently Asked Questions</h2>
 
     <div class="faq-grid">
-      <div class="faq-item">
-        <h4>Is this a subscription?</h4>
-        <p>No. You only pay once and use your credits anytime.</p>
-      </div>
+      <details class="faq-item-pricing" open>
+        <summary>Is this a subscription?</summary>
+        <p>No. You only pay once and use your credits anytime. No recurring charges.</p>
+      </details>
 
-      <div class="faq-item">
-        <h4>Do credits expire?</h4>
-        <p>No. Credits never expire.</p>
-      </div>
+      <details class="faq-item-pricing">
+        <summary>Do credits expire?</summary>
+        <p>No. Credits never expire. Buy them today, use them next year.</p>
+      </details>
 
-      <div class="faq-item">
-        <h4>How many credits does one resume use?</h4>
-        <p>Each resume generation uses 1 credit. and Refining Takes 0.2 Credits.</p>
-      </div>
+      <details class="faq-item-pricing">
+        <summary>How many credits does one resume use?</summary>
+        <p>Each resume generation uses 1 credit. Refining takes 0.2 credits.</p>
+      </details>
     </div>
   </section>
 </main>

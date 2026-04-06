@@ -81,7 +81,7 @@ def save_profile(data: ProfileRequest, email: str = Depends(get_verified_email),
             location=data.location,
             linkedin=data.linkedin,
             portfolio=data.portfolio,
-            credits=5  # 🔑 FREE CREDITS ON SIGNUP
+            credits=2  # 🔑 FREE CREDITS ON SIGNUP
         )
         db.add(profile)
         db.flush()  # Flush to ensure profile is in DB before promocode validation
