@@ -169,7 +169,7 @@ def style_landing_page(request: Request, style: str):
     desc = STYLE_DESCRIPTIONS[style]
     clean_style = style.title()
     
-    return templates.TemplateResponse("index.html", {
+    return templates.TemplateResponse(name="index.html", context={
         "request": request,
         # 🟢 SEO TITLE: "Free Harvard Resume Template..."
         "title": f"Free {clean_style} Resume Template | Resume Match",
@@ -192,7 +192,7 @@ def dynamic_landing_page(request: Request, job_role: str):
     clean_role = job_role.replace("-", " ").title()
     seo_text = ROLE_DESCRIPTIONS.get(job_role, f"Stop applying blindly. Paste the {clean_role} job description and let AI optimize your CV.")
    
-    return templates.TemplateResponse("index.html", {
+    return templates.TemplateResponse(name="index.html", context={
         "request": request,
         "title": f"Free AI Resume Builder for {clean_role}s | Match JD",
         "description": f"Build a {clean_role} resume that passes ATS. {seo_text}",
@@ -209,7 +209,7 @@ def cover_letter_landing_page(request: Request, job_role: str):
     clean_role = job_role.replace("-", " ").title()
     seo_text = ROLE_DESCRIPTIONS.get(job_role, f"Write a compelling {clean_role} cover letter tailored to the job description you're targeting.")
    
-    return templates.TemplateResponse("index.html", {
+    return templates.TemplateResponse(name="index.html", context={
         "request": request,
         "title": f"Free Cover Letter Generator for {clean_role}s | Stand Out",
         "description": f"Write a personalized {clean_role} cover letter that matches the job description. {seo_text}",
@@ -587,7 +587,7 @@ def get_user_count(db: Session) -> int:
 @app.get("/")
 def login_page(request: Request, db: Session = Depends(get_db)):
     user_count = get_user_count(db)
-    return templates.TemplateResponse("index.html", {
+    return templates.TemplateResponse(name="index.html", context={
         "request": request,
         "title": "Resume Match | Build Resumes & Cover Letters from Job Descriptions",
         "description": "Generate ATS-friendly resumes and cover letters matched to any job description",
@@ -606,7 +606,7 @@ def builder_page():
 
 @app.get("/build-resume")
 def build_resume_page(request: Request, db: Session = Depends(get_db)):
-    return templates.TemplateResponse("builder.html", {
+    return templates.TemplateResponse(name="builder.html", context={
         "request": request,
         "title": "Free Resume Builder | Build ATS-Friendly Resumes Online",
         "description": "Create professional, ATS-optimized resumes from your job description. No AI wrapper—pure resume building power. Export to PDF instantly.",
@@ -614,7 +614,7 @@ def build_resume_page(request: Request, db: Session = Depends(get_db)):
 
 @app.get("/build-coverletter")
 def build_coverletter_page(request: Request, db: Session = Depends(get_db)):
-    return templates.TemplateResponse("builder.html", {
+    return templates.TemplateResponse(name="builder.html", context={
         "request": request,
         "title": "Free Cover Letter Generator | Write Compelling Letters",
         "description": "Generate personalized cover letters tailored to specific job descriptions. Stand out with authentic, targeted letters that get you interviews.",
@@ -626,7 +626,7 @@ def pricing_page():
 
 @app.get("/blog")
 def blog_page(request: Request):
-    return templates.TemplateResponse("blog/index.html", {
+    return templates.TemplateResponse(name="blog/index.html", context={
         "request": request,
         "title": "Resume Match Career Blog | Job Search & Resume Tips",
         "description": "Expert tips, insights, and strategies to accelerate your job search and career growth"
@@ -639,7 +639,7 @@ def blog_post_page(request: Request, slug: str, db: Session = Depends(get_db)):
     if not blog_post:
         raise HTTPException(status_code=404, detail="Blog post not found")
     
-    return templates.TemplateResponse("blog/post.html", {
+    return templates.TemplateResponse(name="blog/post.html", context={
         "request": request,
         "title": blog_post.title or "Resume Match Blog | Career Insights",
         "description": blog_post.meta_description or "Read our latest career insights and job search tips",
@@ -652,7 +652,7 @@ def create_blog_page(request: Request, email: str = Depends(get_verified_email))
     if email != "dxdelvin@gmail.com":
         raise HTTPException(status_code=403, detail="Access denied")
     
-    return templates.TemplateResponse("blog/create.html", {
+    return templates.TemplateResponse(name="blog/create.html", context={
         "request": request,
         "title": "Resume Match | Create Blog Post",
         "description": "Create and publish blog posts for Resume Match"
