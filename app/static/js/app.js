@@ -862,9 +862,9 @@ function showCreditPopup() {
 
 // Credit pack details for display
 const CREDIT_PACKS = {
-  basic: { credits: 80, name: "Basic" },
-  popular: { credits: 250, name: "Popular" },
-  pro: { credits: 500, name: "Pro" }
+  basic: { credits: 20, name: "Basic" },
+  popular: { credits: 60, name: "Popular" },
+  pro: { credits: 150, name: "Pro" }
 };
 
 function checkPaymentStatus() {

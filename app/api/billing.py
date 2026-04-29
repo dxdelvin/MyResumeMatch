@@ -72,8 +72,11 @@ def create_checkout_session(
         raise HTTPException(status_code=404, detail="User not found")
 
     price_id = CREDIT_PACKS[plan]["prices"][currency]
-    
-    base_url = os.getenv("BASE_URL", "http://localhost:8000")
+
+    # 🔒 Use BASE_URL env var; fall back to production domain (NOT localhost)
+    # so a missing/misconfigured env never sends real users to localhost.
+    base_url = os.getenv("BASE_URL") or "https://myresumematch.com"
+    base_url = base_url.rstrip("/")
 
     session = stripe.checkout.Session.create(
         mode="payment",
@@ -83,7 +86,7 @@ def create_checkout_session(
             "quantity": 1
         }],
         customer_email=email,
-        success_url=f"{base_url}/builder?payment=success&plan={plan}",
+        success_url=f"{base_url}/builder?payment=success&plan={plan}&session_id={{CHECKOUT_SESSION_ID}}",
         cancel_url=f"{base_url}/pricing?payment=cancelled",
         metadata={
             "pack_id": plan,
@@ -102,32 +105,53 @@ def create_checkout_session(
 async def stripe_webhook(request: Request, db: Session = Depends(get_db)):
     payload = await request.body()
     sig_header = request.headers.get("stripe-signature")
+    webhook_secret = os.getenv("STRIPE_WEBHOOK_SECRET")
+
+    if not webhook_secret:
+        # Misconfiguration: refuse to process events with no secret configured.
+        raise HTTPException(status_code=500, detail="Webhook secret not configured")
 
     try:
         event = stripe.Webhook.construct_event(
             payload,
             sig_header,
-            os.getenv("STRIPE_WEBHOOK_SECRET")
+            webhook_secret
         )
+    except stripe.error.SignatureVerificationError:
+        # Return 400 so Stripe knows the event was rejected (security).
+        raise HTTPException(status_code=400, detail="Invalid signature")
     except Exception:
-        return {"status": "invalid signature"}
+        raise HTTPException(status_code=400, detail="Invalid payload")
 
     if event["type"] == "checkout.session.completed":
         session = event["data"]["object"]
-        metadata = session.get("metadata", {})
-        
+        metadata = session.get("metadata", {}) or {}
+
         email = metadata.get("email")
         pack_id = metadata.get("pack_id")
-        
+        session_id = session.get("id")
+
+        # Only count fully paid sessions
+        payment_status = session.get("payment_status")
+        if payment_status and payment_status != "paid":
+            return {"status": "not_paid"}
+
         # Get financial details
-        amount_total = session.get("amount_total", 0) / 100.0  # Convert cents to dollars/euros
+        amount_total = (session.get("amount_total") or 0) / 100.0
         currency = session.get("currency", "eur")
 
-        if not email or not pack_id:
+        if not email or not pack_id or not session_id:
             return {"status": "ignored"}
-            
+
         if pack_id not in CREDIT_PACKS:
             return {"status": "invalid pack"}
+
+        # 🔒 Idempotency: if we already processed this checkout session, skip.
+        existing = db.query(Payment).filter(
+            Payment.stripe_session_id == session_id
+        ).first()
+        if existing:
+            return {"status": "already_processed"}
 
         user = db.query(Profile).filter(Profile.email == email).first()
         if not user:
@@ -135,20 +159,24 @@ async def stripe_webhook(request: Request, db: Session = Depends(get_db)):
 
         credits_to_add = CREDIT_PACKS[pack_id]["credits"]
 
-        # 1. Update User Credits
-        user.credits = (user.credits or 0) + credits_to_add
-        
-        # 2. Record Payment History (NEW)
-        new_payment = Payment(
-            email=email,
-            amount=amount_total,
-            currency=currency,
-            credits_added=credits_to_add,
-            plan_name=pack_id,
-            stripe_session_id=session.get("id")
-        )
-        db.add(new_payment)
-        
-        db.commit()
+        try:
+            # 1. Update user credits
+            user.credits = (user.credits or 0) + credits_to_add
+
+            # 2. Record payment history
+            new_payment = Payment(
+                email=email,
+                amount=amount_total,
+                currency=currency,
+                credits_added=credits_to_add,
+                plan_name=pack_id,
+                stripe_session_id=session_id
+            )
+            db.add(new_payment)
+            db.commit()
+        except Exception:
+            db.rollback()
+            # Surface 500 so Stripe retries the webhook.
+            raise HTTPException(status_code=500, detail="Failed to record payment")
 
     return {"status": "ok"}
